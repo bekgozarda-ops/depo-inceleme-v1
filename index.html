@@ -142,6 +142,35 @@ textarea{width:100%;min-height:100px;border:0;background:var(--surface);border-r
 .primary[disabled]{opacity:.55}
 .dock .iconbtn{min-height:56px;padding:0 18px}
 .toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--ink-fg);padding:12px 18px;border-radius:999px;font-size:13px;z-index:9;max-width:90vw;text-align:center}
+/* Excel görünümü */
+.xlban{margin-top:10px;border-radius:18px 18px 0 0;overflow:hidden;background:#deeaf1;color:#1f4e79;text-align:center;font-family:Arial,sans-serif}
+.xlban b{display:block;background:#1f4e79;color:#fff;font-size:14px;padding:12px}
+.xlban span{display:block;font-size:11px;padding:8px 10px}
+.xlwrap{overflow:auto;background:#fff;border-radius:0 0 18px 18px;max-height:calc(100vh - 290px);-webkit-overflow-scrolling:touch}
+table.xl{border-collapse:separate;border-spacing:0;font:11px/1.35 Arial,sans-serif;color:#14202e;min-width:100%}
+table.xl th{color:#fff;font-weight:700;text-align:center;padding:8px 8px;position:sticky;top:0;z-index:2;white-space:nowrap}
+table.xl td{border-bottom:1px solid #d0d7e0;border-right:1px solid #e3e8ee;padding:6px 8px;text-align:center;vertical-align:middle;background:#fff;min-width:72px}
+table.xl td.l{text-align:left;white-space:pre-line;min-width:150px}
+table.xl td.b{font-weight:700}
+table.xl .stk{position:sticky;z-index:1}
+table.xl th.stk{z-index:3}
+table.xl .s0{left:0}
+table.xl:not(.xd) .s0{min-width:34px;max-width:34px;padding-inline:4px}
+table.xl:not(.xd) .s1{left:34px;min-width:104px;box-shadow:2px 0 0 #d0d7e0}
+table.xd .s0{min-width:150px;max-width:150px;white-space:normal;box-shadow:2px 0 0 #d0d7e0}
+table.xd td.mut{min-width:60px;font-size:10px}
+table.xl td.ok{background:#c6efce;color:#006100;font-weight:700}
+table.xl td.bad{background:#ffc7ce;color:#9c0006;font-weight:700}
+table.xl td.mid{background:#ffeb9c;color:#9c5700;font-weight:700}
+table.xl td.yes{background:#e2efda;color:#006100;font-weight:700}
+table.xl td.no{background:#fce4d6;color:#9c0006;font-weight:700}
+table.xl td.mut{color:#595959}
+table.xl tr.band td{background:#595959;color:#fff;font-weight:700;text-align:left;padding:6px 10px;position:static}
+table.xl tr.foot td{font-weight:700;border-top:2px solid #1f4e79}
+table.xl a{color:#0563c1;font-weight:600;text-decoration:none}
+.xband{color:#fff;font:700 12px Arial,sans-serif;padding:8px 12px}
+.xph{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px;padding:8px}
+.xph img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px;background:#e3e8ee}
 [hidden]{display:none!important}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
@@ -276,7 +305,7 @@ const isShared=r=>!!(r.sharedAt&&!r.dirty);
 /* ---------- Ana sayfa ---------- */
 let listFilter='', listQ='';
 function renderList(){
-  view='list';cur=null;revokeUrls();
+  view='list';cur=null;readyPack=null;revokeUrls();
   $('title').textContent='';$('back').hidden=true;$('chips').hidden=true;$('progwrap').hidden=true;$('gear').hidden=false;$('saved').textContent='';
   $('gear').textContent=(cfg.name||'D').trim().charAt(0).toUpperCase();
   const all=[...records.values()].sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
@@ -289,7 +318,7 @@ function renderList(){
       <button class="cat pc1" data-filter="pending" aria-pressed="${listFilter==='pending'}"><div><span>Gönderilecek</span><small>e-postalanmadı</small></div><b>${np}</b>${ART_WH}</button>
       <button class="cat pc2" data-filter="shared" aria-pressed="${listFilter==='shared'}"><div><span>Paylaşılan</span><small>e-postaya eklendi</small></div><b>${ns}</b>${ART_MAIL}</button>
     </div>
-    <h3 class="sh2">İncelemeler <small id="shown"></small></h3>`;
+    <h3 class="sh2">İncelemeler <span><small id="shown"></small> <button class="iconbtn" id="viewall" style="min-height:34px;padding:0 14px;font-size:13px">Excel raporu</button></span></h3>`;
     const items=all.filter(r=>!listFilter||(listFilter==='pending'?!isShared(r):isShared(r)));
     h+='<div class="list" id="tasks">'+items.map(r=>{
       const sh=isShared(r),ph=r.photos.slice(0,3),more=r.photos.length-ph.length,p=pct(r);
@@ -311,8 +340,8 @@ function filterList(){
 /* ---------- Alt çubuk ---------- */
 function renderDock(){
   let h='';
-  if(readyPack)h=`<button class="primary" id="shareready" style="background:var(--yes);color:#fff">Hazır: E-postaya ekle ve gönder</button><button class="iconbtn" id="cancelready">Vazgeç</button>`;
-  else if(view==='form')h=`<button class="primary" id="send">E-postayla gönder</button><button class="iconbtn" id="exp">Excel</button><button class="iconbtn" id="done">Bitti</button>`;
+  if(readyPack)h=`<button class="primary" id="shareready" style="background:var(--yes);color:#fff;line-height:1.15">Mail'e ekle ve gönder<small style="display:block;font-weight:500;font-size:12px;opacity:.9">${esc(readyPack.label)}</small></button><button class="iconbtn" id="dlready">Excel</button><button class="iconbtn" id="cancelready" aria-label="Vazgeç">✕</button>`;
+  else if(view==='form')h=`<button class="primary" id="send">E-postayla gönder</button><button class="iconbtn" id="viewxl">Excel</button><button class="iconbtn" id="done">Bitti</button>`;
   else if(view==='settings')h=`<button class="primary" id="done">Kapat</button>`;
   else h=`<button class="primary" id="new">+ Yeni inceleme</button>`;
   $('dockin').innerHTML=h;
@@ -320,7 +349,7 @@ function renderDock(){
 
 /* ---------- Ayarlar ---------- */
 function renderSettings(){
-  view='settings';cur=null;revokeUrls();
+  view='settings';cur=null;readyPack=null;revokeUrls();
   $('title').textContent='Ayarlar';$('back').hidden=false;$('chips').hidden=true;$('progwrap').hidden=true;$('gear').hidden=true;$('saved').textContent='';
   $('main').innerHTML=`<div class="card set pad pc3" style="margin-top:14px">
    <label for="nm">Adınız</label>
@@ -388,6 +417,7 @@ async function fillThumbs(){
 }
 function renderForm(id){
   const rec=records.get(id);if(!rec)return renderList();
+  if(!readyPack||readyPack.recs.length!==1||readyPack.recs[0].id!==id)readyPack=null;
   cur=rec;view='form';norm(rec);
   $('back').hidden=false;$('chips').hidden=false;$('progwrap').hidden=false;$('gear').hidden=true;
   $('title').textContent=rec.v.ad||'Yeni inceleme';
@@ -435,17 +465,27 @@ function shrink(file,max=1600){
     img.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('img'))};img.src=u;
   });
 }
+/* HEIC/HEIF (iPhone fotoğrafları bilgisayarda/Edge'de açılmaz) → JPEG'e çevrilir. Kütüphane yalnızca gerektiğinde yüklenir. */
+async function toDecodable(file){
+  try{await loadImg(file);return file}catch(e){}
+  if(!window.heic2any)await new Promise((res,rej)=>{const sc=document.createElement('script');sc.src='heic2any.min.js';sc.onload=res;sc.onerror=()=>rej(new Error('lib'));document.head.appendChild(sc)});
+  const out=await window.heic2any({blob:file,toType:'image/jpeg',quality:0.85});
+  return Array.isArray(out)?out[0]:out;
+}
 async function addPhotos(secId,files){
   const rec=cur;if(!rec)return;
   const sec=SECTIONS.find(s=>s.id===secId);let ok=0;
   toast(files.length+' fotoğraf kaydediliyor…');
   for(const f of files){
     try{
-      const blob=await shrink(f),id=uid();
-      await dbPut('photo',{id,recId:rec.id,blob});
+      let blob;
+      try{blob=await shrink(await toDecodable(f))}
+      catch(e){const ext=(f.name.split('.').pop()||'').toUpperCase();throw new Error(e&&e.message==='lib'?`"${f.name}" HEIC dosyasıdır; dönüştürücü yüklenemedi. İnternetliyken tekrar deneyin.`:`"${f.name}" açılamadı (${f.type||ext}). JPG veya PNG deneyin.`)}
+      const id=uid();
+      try{await dbPut('photo',{id,recId:rec.id,blob})}catch(e){throw new Error('Tarayıcı depolaması dolu veya kapalı (özel/InPrivate pencere olabilir).')}
       const n=rec.photos.filter(p=>p.sec===secId).length+1;
       rec.photos.push({id,sec:secId,n:`${slug(rec.v.ad)}_${slug(sec.title)}_${String(n).padStart(2,'0')}_${id.slice(0,4)}.jpg`});ok++;
-    }catch(e){toast('Fotoğraf eklenemedi.')}
+    }catch(e){toast((e&&e.message)||'Fotoğraf eklenemedi.',7000)}
   }
   if(ok){rec.dirty=true;await persist(rec);if(cur===rec)rerenderKeepScroll();toast(ok+' fotoğraf eklendi')}
 }
@@ -512,15 +552,21 @@ function bannerText(recs){
   const ok=recs.filter(r=>{const [m,t]=targets(r);return t>0&&m===t}).length;
   return `${d}  |  Toplam ${recs.length} Depo  |  Toplam Kapalı Alan: ${area.toLocaleString('tr-TR')} m²  |  ✔ Tüm hedefleri karşılayan: ${ok} / ${recs.length}`;
 }
-function addSummary(wb,recs){
-  const ws=wb.addWorksheet('İnceleme Özeti',{views:[{state:'frozen',ySplit:4,showGridLines:false}],pageSetup:{orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0}});
-  const cols=[
+const SUM_COLS=[
    ['#',4.5,C_NAVY],['DEPO İSMİ',24,C_BLUE],['İLETİŞİM',18,C_BLUE],['ÖZET',42,C_BLUE],
    ['KONUM',13,C_BLUE],['ULAŞIM YOLLARI',20,C_BLUE],
    ['KİRA\n(USD/m²)',11,C_RED],['HEDEF\nUYUMU',11,C_RED],
    ['KAPALI ALAN\n(m²)',13,C_GRAY],['ZEMİN\nYÜKSEKLİK (m)',13,C_GRAY],['BODRUM\nYÜKSEKLİK (m)',13,C_GRAY],['AKS ARALIĞI\n(X × Y m)',13,C_GRAY],
    ['DÖŞEME YÜKÜ\n(t/m²)',13,C_GRAY],['MANEVRA\nALANI (m)',11,C_GRAY],['RAMPA\nSAYISI',9,C_GRAY],['IŞIKLIK\n(%)',9,C_GRAY],
    ['GÖRSELLER\n(adet)',12,C_BROWN]];
+function sumVals(r,idx){
+  const v=r.v,[m,t]=targets(r);
+  return [idx+1,v.ad||'Adsız depo',v.iletisim||'',ozetText(r),null,v.ulasim||'',numOf(r,'kira'),t?`${m}/${t}`:'—',numOf(r,'kapali'),numOf(r,'hz'),numOf(r,'hb'),
+    (v.aksx||v.aksy)?`${v.aksx||'?'} × ${v.aksy||'?'}`:'',numOf(r,'yuk'),numOf(r,'manevra'),numOf(r,'rampa'),numOf(r,'isiklik'),r.photos.length];
+}
+function addSummary(wb,recs){
+  const ws=wb.addWorksheet('İnceleme Özeti',{views:[{state:'frozen',ySplit:4,showGridLines:false}],pageSetup:{orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0}});
+  const cols=SUM_COLS;
   const n=cols.length;
   titleRows(ws,n,'LOJİSTİK TESİS  —  DEPO İNCELEME RAPORU',bannerText(recs));
   cols.forEach((c,i)=>ws.getColumn(i+1).width=c[1]);
@@ -532,9 +578,7 @@ function addSummary(wb,recs){
   ws.getRow(4).height=28;
   recs.forEach((r,idx)=>{
     const row=5+idx,v=r.v,[m,t]=targets(r);
-    const ozet=ozetText(r);
-    const vals=[idx+1,v.ad||'Adsız depo',v.iletisim||'',ozet,null,v.ulasim||'',numOf(r,'kira'),t?`${m}/${t}`:'—',numOf(r,'kapali'),numOf(r,'hz'),numOf(r,'hb'),
-      (v.aksx||v.aksy)?`${v.aksx||'?'} × ${v.aksy||'?'}`:'',numOf(r,'yuk'),numOf(r,'manevra'),numOf(r,'rampa'),numOf(r,'isiklik'),r.photos.length];
+    const vals=sumVals(r,idx),ozet=vals[3];
     vals.forEach((x,i)=>{
       const c=ws.getCell(row,i+1);c.value=(x===null||x==='')?null:x;c.font=AR(9,i===1);
       c.alignment={horizontal:i===3||i===5?'left':'center',vertical:'middle',wrapText:true};
@@ -643,51 +687,244 @@ async function exportXlsx(recs,name){
   catch(e){toast('Excel oluşturulamadı: '+((e&&e.message)||e),5000)}
 }
 
-/* ---------- E-posta ile rapor (telefonun Paylaş menüsü: Mail ekleri ile açılır) ---------- */
+/* ---------- Rapor görüntüleme (Excel düzeninde, uygulama içinde) ---------- */
+let reportFrom=null,reportRecs=[],repTab='ozet';
+const hexc=c=>'#'+c.slice(2);
+const TH_COL={9:'hz',10:'hb',12:'yuk',13:'manevra',15:'isiklik'};
+function toneOf(f,x){
+  if(f.t===Y)return x==='Evet'?'yes':x==='Hayır'?'no':'';
+  if(f.min!==undefined&&typeof x==='number')return x>=f.min?'ok':'bad';
+  return '';
+}
+function reportSummaryHtml(recs){
+  let h='<table class="xl"><thead><tr>'+SUM_COLS.map((c,i)=>`<th class="${i<2?'stk s'+i:''}" style="background:${hexc(c[2])}">${esc(c[0]).replace(/\n/g,'<br>')}</th>`).join('')+'</tr></thead><tbody>';
+  recs.forEach((r,idx)=>{
+    const [m,t]=targets(r),vals=sumVals(r,idx);
+    h+='<tr>'+vals.map((x,i)=>{
+      let cls=i<2?'stk s'+i:'',inner=x===null||x===''?'':esc(typeof x==='number'?x.toLocaleString('tr-TR'):x);
+      if(i===1)cls+=' b';
+      if(i===3||i===5)cls+=' l';
+      if(i===4){const u=r.v.konum||'';inner=/^https?:\/\//i.test(u)?`<a href="${esc(u)}" target="_blank" rel="noopener">📍 Konum</a>`:esc(u)}
+      if(i===7&&t)cls+=' '+(m===t?'ok':m===0?'bad':'mid');
+      if(TH_COL[i]){const n=numOf(r,TH_COL[i]),f=ALLF.find(z=>z.k===TH_COL[i]);if(n!==null)cls+=' '+(n>=f.min?'ok':'bad')}
+      return `<td class="${cls}">${inner}</td>`;
+    }).join('')+'</tr>';
+  });
+  return h+'</tbody></table>';
+}
+function reportDetailsHtml(recs){
+  let h='<table class="xl xd"><thead><tr><th class="stk s0" style="background:#1f4e79">KRİTER</th><th style="background:#2e75b6">HEDEF</th>'+recs.map(r=>`<th style="background:#2e75b6">${esc(r.v.ad||'Adsız depo')}</th>`).join('')+'</tr></thead><tbody>';
+  SECTIONS.forEach(s=>{
+    h+=`<tr class="band"><td colspan="${2+recs.length}">${esc(s.x||'GENEL BİLGİ')}</td></tr>`;
+    s.f.forEach(f=>{
+      let lab=f.l||f.x;if(f.t===N&&f.u&&!/\(/.test(lab))lab+=` (${f.u})`;
+      h+=`<tr><td class="stk s0 l">${esc(lab)}</td><td class="mut">${f.min!==undefined?esc(`≥ ${f.min} ${f.u||''}`.trim()):''}</td>`+recs.map(r=>{
+        const x=cellVal(r,f);let inner=x===''?'':esc(typeof x==='number'?x.toLocaleString('tr-TR'):x);
+        if(f.link&&/^https?:\/\//i.test(x))inner=`<a href="${esc(x)}" target="_blank" rel="noopener">📍 Konum</a>`;
+        return `<td class="${toneOf(f,x)} ${f.t===A?'l':''}">${inner}</td>`;
+      }).join('')+'</tr>';
+    });
+  });
+  h+=`<tr class="foot"><td class="stk s0 l">Fotoğraf sayısı</td><td></td>`+recs.map(r=>`<td>${r.photos.length}</td>`).join('')+'</tr>';
+  return h+'</tbody></table>';
+}
+function reportPhotosHtml(recs){
+  let h='';
+  recs.forEach(r=>{
+    if(!r.photos.length)return;
+    h+=`<div class="xband" style="background:#1f4e79">${esc(r.v.ad||'Adsız depo')}</div>`;
+    SECTIONS.forEach(s=>{
+      const list=r.photos.filter(p=>p.sec===s.id);if(!list.length)return;
+      h+=`<div class="xband" style="background:#2e75b6">${esc(s.title)} (${list.length})</div><div class="xph">${list.map(p=>`<img data-pid="${p.id}" alt="${esc(p.n)}">`).join('')}</div>`;
+    });
+  });
+  return h||'<p class="hint" style="padding:16px">Bu raporda fotoğraf yok.</p>';
+}
+function renderReport(recs,from){
+  view='report';cur=null;readyPack=null;revokeUrls();
+  reportFrom=from||null;reportRecs=recs;
+  $('title').textContent='Excel raporu';$('back').hidden=false;$('progwrap').hidden=true;$('gear').hidden=true;$('saved').textContent='';
+  const tabs=[['ozet','İnceleme Özeti'],['det','Detaylar'],['foto','Fotoğraflar']];
+  $('chips').hidden=false;
+  $('chips').innerHTML=tabs.map(t=>`<button class="chip ${repTab===t[0]?'on':''}" data-tab="${t[0]}">${t[1]}</button>`).join('');
+  const body=repTab==='ozet'?reportSummaryHtml(recs):repTab==='det'?reportDetailsHtml(recs):reportPhotosHtml(recs);
+  $('main').innerHTML=`<div class="xlban"><b>LOJİSTİK TESİS — DEPO İNCELEME RAPORU</b><span>${esc(bannerText(recs))}</span></div><div class="xlwrap">${body}</div><p class="hint">Excel dosyasını indirdiğinizde aynı görünümü Excel'de de bulursunuz. İndirilenler: Dosyalar › İndirilenler.</p>`;
+  $('dockin').innerHTML=`<button class="primary" id="dlxl">Excel'i indir</button><button class="iconbtn" id="dlpdf">PDF</button><button class="iconbtn" id="done">Kapat</button>`;
+  fillThumbs();window.scrollTo(0,0);
+}
+const reportBase=recs=>recs.length===1?`Depo_Inceleme_${slug(recs[0].v.ad)}_${todayStr()}`:`Depo_Inceleme_Raporu_${todayStr()}`;
+async function downloadReport(recs,kind){
+  try{
+    toast(kind==='pdf'?'PDF hazırlanıyor…':'Excel hazırlanıyor…',15000);
+    const base=reportBase(recs);
+    if(kind==='pdf')downloadBlob(await pdfBlob(recs),base+'.pdf');
+    else downloadBlob(new Blob([await buildWorkbook(recs)],{type:XLSX_MIME}),base+'.xlsx');
+    toast((kind==='pdf'?'PDF':'Excel')+' indirildi. Dosyalar › İndirilenler klasöründe.',6000);
+  }catch(e){toast('Oluşturulamadı: '+((e&&e.message)||e),6000)}
+}
+
+/* ---------- PDF rapor (canvas ile çizilen sayfalar → PDF; Türkçe karakterler sorunsuz) ---------- */
+const PW=1240,PH=1754,PM=60,FF='system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif';
+const dateLong=()=>new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'});
+function loadImg(blob){return new Promise((res,rej)=>{const u=URL.createObjectURL(blob),i=new Image();i.onload=()=>{URL.revokeObjectURL(u);res(i)};i.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('img'))};i.src=u})}
+class PdfPages{
+  constructor(){this.pages=[];this.newPage()}
+  newPage(){
+    const c=document.createElement('canvas');c.width=PW;c.height=PH;const x=c.getContext('2d');
+    x.fillStyle='#fff';x.fillRect(0,0,PW,PH);
+    x.fillStyle='#1f4e79';x.fillRect(0,0,PW,74);
+    x.fillStyle='#fff';x.textBaseline='middle';x.font='700 28px '+FF;x.fillText('DEPO İNCELEME RAPORU',PM,37);
+    x.textAlign='right';x.font='500 22px '+FF;x.fillText(dateLong(),PW-PM,37);x.textAlign='left';
+    this.c=c;this.x=x;this.y=104;this.pages.push(c);
+  }
+  need(h){if(this.y+h>PH-70)this.newPage()}
+  wrap(text,w,font){
+    const x=this.x;x.font=font;const out=[];
+    String(text).split('\n').forEach(par=>{
+      let line='';
+      par.split(/\s+/).forEach(word=>{
+        let wd=word;
+        while(x.measureText(wd).width>w){let k=wd.length;while(k>1&&x.measureText(wd.slice(0,k)).width>w)k--;if(line){out.push(line);line=''}out.push(wd.slice(0,k));wd=wd.slice(k)}
+        const t=line?line+' '+wd:wd;
+        if(x.measureText(t).width>w&&line){out.push(line);line=wd}else line=t;
+      });
+      out.push(line);
+    });
+    return out;
+  }
+  band(text,color,h,font){
+    this.need(h+10);const x=this.x;x.fillStyle=color;x.fillRect(PM,this.y,PW-2*PM,h);
+    x.fillStyle='#fff';x.font=font;x.textBaseline='middle';x.fillText(text,PM+16,this.y+h/2+1);this.y+=h+8;
+  }
+  row(label,value,tone){
+    const x=this.x,LW=520,VX=PM+560,VW=PW-PM-VX-12,F='500 21px '+FF;
+    const ll=this.wrap(label,LW,F),vl=this.wrap(value,VW,'600 21px '+FF);
+    const h=Math.max(ll.length,vl.length)*28+14;this.need(h);
+    if(tone){x.fillStyle={ok:'#C6EFCE',bad:'#FFC7CE',yes:'#E2EFDA',no:'#FCE4D6'}[tone];x.fillRect(VX-8,this.y+2,PW-PM-VX+8,h-4)}
+    x.textBaseline='middle';x.font=F;x.fillStyle='#14202e';ll.forEach((l,i)=>x.fillText(l,PM+8,this.y+7+i*28+14));
+    x.font='600 21px '+FF;x.fillStyle={ok:'#006100',bad:'#9C0006',yes:'#006100',no:'#9C0006'}[tone]||'#14202e';vl.forEach((l,i)=>x.fillText(l,VX,this.y+7+i*28+14));
+    x.strokeStyle='#e3e8ee';x.lineWidth=1;x.beginPath();x.moveTo(PM,this.y+h);x.lineTo(PW-PM,this.y+h);x.stroke();this.y+=h;
+  }
+  async photo(blob,col,boxW,boxH,x0){
+    const img=await loadImg(blob),k=Math.min(boxW/img.width,boxH/img.height),w=img.width*k,h=img.height*k;
+    this.x.drawImage(img,x0+(boxW-w)/2,this.y+(boxH-h)/2,w,h);
+  }
+  finish(){this.pages.forEach((c,i)=>{const x=c.getContext('2d');x.fillStyle='#6b7480';x.font='500 18px '+FF;x.textAlign='center';x.textBaseline='middle';x.fillText(`Sayfa ${i+1} / ${this.pages.length}`,PW/2,PH-34);x.textAlign='left'})}
+}
+function valText(f,v){
+  if(typeof v==='number')return v.toLocaleString('tr-TR')+(f.u?' '+f.u:'');
+  return String(v);
+}
+async function pdfBlob(recs){
+  const pg=new PdfPages();
+  let first=true;
+  for(const rec of recs){
+    if(!first)pg.newPage();first=false;
+    const [m,t]=targets(rec);
+    pg.band((rec.v.ad||'Adsız depo')+(t?`   |   Hedef uyumu ${m}/${t}`:''),'#2e75b6',54,'700 26px '+FF);
+    for(const s of SECTIONS){
+      const rows=s.f.filter(f=>isOn(rec,f)&&cellVal(rec,f)!=='');
+      if(!rows.length)continue;
+      pg.band(s.x||'GENEL BİLGİ','#595959',36,'700 19px '+FF);
+      rows.forEach(f=>{
+        const v=cellVal(rec,f);let tone='';
+        if(f.t===Y)tone=v==='Evet'?'yes':'no';
+        if(f.min!==undefined&&typeof v==='number')tone=v>=f.min?'ok':'bad';
+        let lab=f.l||f.x;if(f.min!==undefined)lab+=`  (hedef ≥ ${f.min} ${f.u})`;
+        pg.row(lab,valText(f,v),tone);
+      });
+      pg.y+=10;
+    }
+    if(rec.photos.length){
+      pg.newPage();
+      pg.band((rec.v.ad||'Adsız depo')+'  |  Fotoğraflar','#2e75b6',54,'700 26px '+FF);
+      const BW=(PW-2*PM-24)/2,BH=380;
+      for(const s of SECTIONS){
+        const list=rec.photos.filter(p=>p.sec===s.id);if(!list.length)continue;
+        pg.band(`${s.title}  (${list.length})`,'#595959',36,'700 19px '+FF);
+        for(let i=0;i<list.length;i+=2){
+          pg.need(BH+14);
+          for(let j=0;j<2&&i+j<list.length;j++){
+            const ph=await dbGet('photo',list[i+j].id);if(!ph)continue;
+            await pg.photo(ph.blob,j,BW,BH,PM+j*(BW+24));
+          }
+          pg.y+=BH+14;
+        }
+      }
+    }
+  }
+  pg.finish();
+  const jpgs=[];
+  for(const c of pg.pages){const b=await new Promise(r=>c.toBlob(r,'image/jpeg',0.82));jpgs.push(new Uint8Array(await b.arrayBuffer()))}
+  const enc=new TextEncoder(),parts=[],offs=[];let off=0;
+  const push=d=>{const u=typeof d==='string'?enc.encode(d):d;parts.push(u);off+=u.length};
+  const obj=(id,fn)=>{offs[id]=off;push(`${id} 0 obj\n`);fn();push('endobj\n')};
+  const N=jpgs.length;
+  push('%PDF-1.4\n');
+  obj(1,()=>push('<< /Type /Catalog /Pages 2 0 R >>\n'));
+  obj(2,()=>push(`<< /Type /Pages /Count ${N} /Kids [${jpgs.map((_,i)=>`${3+3*i} 0 R`).join(' ')}] >>\n`));
+  jpgs.forEach((j,i)=>{
+    const pid=3+3*i,cid=4+3*i,iid=5+3*i,cs='q 595 0 0 842 0 0 cm /Im0 Do Q';
+    obj(pid,()=>push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im0 ${iid} 0 R >> >> /Contents ${cid} 0 R >>\n`));
+    obj(cid,()=>push(`<< /Length ${cs.length} >>\nstream\n${cs}\nendstream\n`));
+    obj(iid,()=>{push(`<< /Type /XObject /Subtype /Image /Width ${PW} /Height ${PH} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${j.length} >>\nstream\n`);push(j);push('\nendstream\n')});
+  });
+  const xr=off,total=3+3*N;
+  let xt=`xref\n0 ${total}\n0000000000 65535 f \n`;
+  for(let id=1;id<total;id++)xt+=String(offs[id]).padStart(10,'0')+' 00000 n \n';
+  push(xt+`trailer\n<< /Size ${total} /Root 1 0 R >>\nstartxref\n${xr}\n%%EOF`);
+  return new Blob(parts,{type:'application/pdf'});
+}
+
+/* ---------- E-posta ile rapor ----------
+   iPhone'un Paylaş menüsü Excel (.xlsx) dosyasını doğrudan eklemeye izin vermeyebilir; PDF, JPG ve metin dosyalarını kabul eder.
+   Bu yüzden önce PDF rapor + fotoğraflar (+ Excel kabul edilirse Excel) hazırlanır, sonra tek dokunuşla Mail'e eklenir. */
 let readyPack=null;
 async function preparePack(recs){
-  const one=recs.length===1;
-  const name=one?`Depo_Inceleme_${slug(recs[0].v.ad)}_${todayStr()}.xlsx`:`Depo_Inceleme_Raporu_${todayStr()}.xlsx`;
-  const xl=new File([await buildWorkbook(recs)],name,{type:XLSX_MIME});
+  const one=recs.length===1,base=one?`Depo_Inceleme_${slug(recs[0].v.ad)}_${todayStr()}`:`Depo_Inceleme_Raporu_${todayStr()}`;
+  const xl=new File([await buildWorkbook(recs)],base+'.xlsx',{type:XLSX_MIME});
+  const pdf=new File([await pdfBlob(recs)],base+'.pdf',{type:'application/pdf'});
   const photos=[];
   if(cfg.photos!==false)for(const r of recs)for(const p of r.photos){const ph=await dbGet('photo',p.id);if(ph)photos.push(new File([ph.blob],p.n,{type:'image/jpeg'}))}
   const title=one?`Depo İnceleme: ${recs[0].v.ad||'Adsız depo'} (${fmtDate(Date.now())})`:`Depo İnceleme Raporu (${fmtDate(Date.now())}) – ${recs.length} depo`;
-  const text=recs.map(r=>{const [m,t]=targets(r);return `• ${r.v.ad||'Adsız depo'}${t?` – hedef uyumu ${m}/${t}`:''}, ${r.photos.length} fotoğraf`}).join('\n')+'\n\nDetaylar ekteki Excel dosyasındadır.';
-  return {recs,xl,photos,title,text};
+  const text=recs.map(r=>{const [m,t]=targets(r);return `• ${r.v.ad||'Adsız depo'}${t?` – hedef uyumu ${m}/${t}`:''}, ${r.photos.length} fotoğraf`}).join('\n')+'\n\nDetaylar ekteki rapordadır.';
+  const can=a=>!!(navigator.canShare&&navigator.canShare({files:a}));
+  const tries=[[pdf,xl,...photos],[pdf,...photos],[pdf,xl],[xl,...photos],[pdf],[...photos],[xl]];
+  let files=null;
+  if(navigator.share)for(const t of tries){if(t.length&&can(t)){files=t;break}}
+  const label=files?[files.includes(pdf)?'PDF':'',files.includes(xl)?'Excel':'',files.filter(f=>f.type==='image/jpeg').length?files.filter(f=>f.type==='image/jpeg').length+' fotoğraf':''].filter(Boolean).join(' + '):'';
+  const notes=[];
+  if(files&&!files.includes(xl))notes.push('Telefon Excel dosyasını doğrudan eklemeye izin vermiyor. PDF rapor eklenir; Excel için "Excel" düğmesiyle Dosyalar\'a kaydedip Mail\'de "Ek ekle"yi kullanın.');
+  if(files&&photos.length&&files.filter(f=>f.type==='image/jpeg').length===0)notes.push('Fotoğraflar PDF raporun içindedir.');
+  return {recs,xl,pdf,photos,title,text,files,label,note:notes.join(' ')};
 }
-function packFiles(pk,withPhotos){return withPhotos?[pk.xl,...pk.photos]:[pk.xl]}
-async function doShare(pk){
-  let files=packFiles(pk,true),note='';
-  if(!(navigator.canShare&&navigator.canShare({files}))){
-    files=packFiles(pk,false);
-    if(!(navigator.canShare&&navigator.canShare({files})))return mailFallback(pk);
-    note='Fotoğraflar çok olduğu için yalnızca Excel eklendi; fotoğrafları kayıt ekranından tek tek paylaşabilirsiniz.';
-  }
-  await navigator.share({files,title:pk.title,text:pk.text});
-  pk.recs.forEach(r=>{r.sharedAt=Date.now();r.dirty=false;persist(r)});
-  readyPack=null;renderDock();if(view==='list')renderList();
-  if(note)toast(note,6000);
+function doShare(pk){
+  /* Not: Safari kullanıcı dokunuşundan sonra bekletmeye izin vermez, bu yüzden burada await yok. */
+  if(!pk.files)return Promise.resolve(mailFallback(pk));
+  return navigator.share({files:pk.files,title:pk.title,text:pk.text}).then(()=>{
+    pk.recs.forEach(r=>{r.sharedAt=Date.now();r.dirty=false;persist(r)});
+    readyPack=null;renderDock();if(view==='list')renderList();
+  });
 }
 function mailFallback(pk){
-  downloadBlob(pk.xl,pk.xl.name);
-  const to=encodeURIComponent(cfg.mail||'');
-  const body=encodeURIComponent(pk.text+'\n\n(Excel dosyası indirildi; e-postaya ekleyin.)');
-  toast('Bu tarayıcı dosya paylaşımını desteklemiyor. Excel indirildi, e-posta açılıyor.',6000);
-  setTimeout(()=>{location.href=`mailto:${to}?subject=${encodeURIComponent(pk.title)}&body=${body}`},900);
+  downloadBlob(pk.pdf,pk.pdf.name);setTimeout(()=>downloadBlob(pk.xl,pk.xl.name),600);
+  const to=encodeURIComponent(cfg.mail||''),body=encodeURIComponent(pk.text+'\n\n(PDF ve Excel indirildi; e-postaya ekleyin.)');
+  toast('Bu tarayıcıda dosya paylaşımı yok. PDF ve Excel indirildi, e-posta açılıyor.',6000);
+  setTimeout(()=>{location.href=`mailto:${to}?subject=${encodeURIComponent(pk.title)}&body=${body}`},1400);
+  readyPack=null;renderDock();
 }
 async function mailRecs(recs){
   if(!recs.length||sending)return;
   sending=true;const b=$('send')||$('mailall');if(b)b.disabled=true;
-  let pk;
-  try{toast('Rapor hazırlanıyor…',15000);pk=await preparePack(recs)}
-  catch(e){sending=false;if(b)b.disabled=false;toast('Rapor oluşturulamadı: '+((e&&e.message)||e),5000);return}
-  sending=false;if(b)b.disabled=false;$('toast').hidden=true;
-  try{await doShare(pk)}
-  catch(e){
-    if(e&&e.name==='AbortError')return;
-    if(e&&e.name==='NotAllowedError'){readyPack=pk;renderDock();toast('Rapor hazır. Yeşil düğmeye dokunun.',5000);return}
-    toast('Paylaşılamadı: '+((e&&e.message)||e),5000);
-  }
+  try{
+    toast('Rapor hazırlanıyor…',20000);
+    const pk=await preparePack(recs);
+    $('toast').hidden=true;
+    if(!pk.files){mailFallback(pk);return}
+    readyPack=pk;renderDock();
+    toast(pk.note||'Rapor hazır. Alttaki düğmeye dokunun.',pk.note?9000:5000);
+  }catch(e){toast('Rapor oluşturulamadı: '+((e&&e.message)||e),6000)}
+  finally{sending=false;const b2=$('send')||$('mailall');if(b2)b2.disabled=false}
 }
 
 /* ---------- Olaylar ---------- */
@@ -697,7 +934,12 @@ document.addEventListener('click',async e=>{
   if(t.dataset.filter){listFilter=listFilter===t.dataset.filter?'':t.dataset.filter;return renderList()}
   if(t.dataset.open)return renderForm(t.dataset.open);
   if(t.id==='gear'){await flush();return renderSettings()}
-  if(t.id==='back'||t.id==='done'){await flush();return renderList()}
+  if(t.id==='back'||t.id==='done'){await flush();if(view==='report'&&reportFrom&&records.has(reportFrom))return renderForm(reportFrom);return renderList()}
+  if(t.dataset.tab){repTab=t.dataset.tab;return renderReport(reportRecs,reportFrom)}
+  if(t.id==='viewxl'){await flush();repTab='ozet';return renderReport([cur],cur.id)}
+  if(t.id==='viewall'){repTab='ozet';return renderReport([...records.values()].sort((a,b)=>a.createdAt-b.createdAt),null)}
+  if(t.id==='dlxl')return downloadReport(reportRecs,'xlsx');
+  if(t.id==='dlpdf')return downloadReport(reportRecs,'pdf');
   if(t.id==='cfgsave'){
     cfg.name=$('nm').value.trim();cfg.mail=$('mail').value.trim();cfg.photos=$('pho').checked;
     try{await dbPut('kv',cfg,'cfg');$('cfgmsg').textContent='Kaydedildi'}catch(x){$('cfgmsg').textContent='Kaydedilemedi'}return}
@@ -706,10 +948,10 @@ document.addEventListener('click',async e=>{
   if(t.id==='mailall'){return mailRecs([...records.values()].sort((a,b)=>a.createdAt-b.createdAt))}
   if(t.id==='shareready'){
     const pk=readyPack;if(!pk)return;
-    try{await doShare(pk)}catch(x){if(x&&x.name!=='AbortError')toast('Paylaşılamadı: '+((x&&x.message)||x),5000)}
+    try{await doShare(pk)}catch(x){if(x&&x.name!=='AbortError')toast('Paylaşılamadı: '+((x&&x.message)||x),6000)}
     return}
+  if(t.id==='dlready'){if(readyPack)downloadBlob(readyPack.xl,readyPack.xl.name);return}
   if(t.id==='cancelready'){readyPack=null;return renderDock()}
-  if(t.id==='exp'){await flush();return exportXlsx([cur],`Depo_Inceleme_${slug(cur.v.ad)}_${todayStr()}.xlsx`)}
   if(t.dataset.go){const el=$('s_'+t.dataset.go);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});return}
   if(t.parentElement&&t.parentElement.dataset&&t.parentElement.dataset.yn&&cur){
     const k=t.parentElement.dataset.yn,val=t.dataset.v;

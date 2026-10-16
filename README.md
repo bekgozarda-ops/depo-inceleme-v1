@@ -3,7 +3,7 @@
 Sahada telefondan doldurulan, internetsiz de çalışan inceleme formu. Rapor (Excel + fotoğraflar) telefonun Paylaş menüsüyle e-postaya eklenir.
 
 ## Dosyalar
-`index.html` (uygulama), `sw.js` (çevrimdışı çalışma), `manifest.webmanifest` + simgeler, `exceljs.min.js` (Excel raporu üretimi, pakete dahil).
+`index.html` (uygulama), `sw.js` (çevrimdışı çalışma), `manifest.webmanifest` + simgeler, `exceljs.min.js` (Excel raporu üretimi), `heic2any.min.js` (iPhone HEIC fotoğraflarını JPG'e çevirir; bilgisayarda/Edge'de gerekir). İkisi de pakete dahil.
 
 ## Yayınlama (HTTPS şart)
 Klasörün **içindeki tüm dosyaları** bir https adresine koyun (ör. GitHub Pages: repo → Settings → Pages → main / root). Şirket verisi uygulamada tutulmaz; her şey telefonda kalır.
@@ -17,17 +17,18 @@ Klasörün **içindeki tüm dosyaları** bir https adresine koyun (ör. GitHub P
 ## Sahada kullanım
 1. **+ Yeni inceleme** → depo adı → bölümleri doldurun. Her bölümde **+ Fotoğraf** ile kamera açılır.
 2. Her değişiklik anında telefona kaydedilir.
-3. Gezi bitince formda **E-postayla gönder**: Paylaş menüsü açılır → **Mail** → kendi adresinizi yazın → Gönder. Ekte Excel raporu ve (Ayarlar'da açıksa) orijinal fotoğraflar olur.
+3. Gezi bitince formda **E-postayla gönder**: rapor hazırlanır (birkaç saniye), alttaki yeşil **Mail'e ekle ve gönder** düğmesi çıkar. Ona dokunun → Paylaş menüsünde **Mail** → kendi adresinizi yazın → Gönder. Ekte PDF rapor ve (Ayarlar'da açıksa) orijinal fotoğraflar olur. iPhone Excel dosyasını doğrudan eklemeye izin vermeyebilir; bu durumda yeşil düğmenin yanındaki **Excel** düğmesiyle Excel'i Dosyalar'a kaydedip Mail'de "Ek ekle" ile ekleyin.
 4. Listede **Tümünü e-postala**: tüm depoları tek Excel'de (her depo bir satır / bir sütun) gönderir.
-5. **Excel indir**: raporu dosya olarak indirir.
+5. **Excel** (formda) veya **Excel raporu** (ana sayfada, tüm depolar): raporu Excel düzeninde uygulama içinde görüntüler (İnceleme Özeti / Detaylar / Fotoğraflar sekmeleri). Alttaki **Excel'i indir** ve **PDF** düğmeleri dosyayı doğrudan telefona indirir (Dosyalar › İndirilenler).
 
 ## Excel raporu
 - **İnceleme Özeti:** Portföy Takip Raporu düzeninde (başlık, banner, GENEL / LOKASYON / KARAR / TEKNİK BİLGİLER grupları). ÖZET kolonu portföy raporundaki ÖZET satırlarıyla aynı mantıkta; hedefi karşılayan değerler yeşil, karşılamayanlar kırmızı.
 - **Detaylar:** Tüm kriterler, depolar yan yana, hedef kolonuyla.
 - **Fotoğraflar:** Depo ve bölüm bazında küçük resimler.
+- **PDF rapor:** Aynı içerik, telefonda ve Mail'de doğrudan açılır; direktöre iletmek için uygundur.
 
 ## Notlar
 - Alıcıyı Paylaş menüsünde (Mail'de) siz seçersiniz; uygulama alıcı dolduramaz. Ayarlar'daki adres yalnızca Paylaş menüsü olmayan tarayıcılarda otomatik doldurulur.
 - Çok fazla fotoğraf varsa telefon yalnızca Excel'i ekleyebilir; Excel'in "Fotoğraflar" sayfasında küçük hâlleri zaten bulunur.
 - Tarayıcı verisini silerseniz gönderilmemiş incelemeler kaybolur; sahadan dönünce raporu e-postalayın.
-- Güncelleme: `index.html` değişirse `sw.js` içindeki `CACHE` adını artırın (`depo-inceleme-v4` → `v5`). Yeni sürüm, uygulamayı bir kez internetliyken açıp kapatınca yüklenir.
+- Güncelleme: `index.html` değişirse `sw.js` içindeki `CACHE` adını artırın (`depo-inceleme-v7` → `v8`). Yeni sürüm, uygulamayı bir kez internetliyken açıp kapatınca yüklenir.
