@@ -1,5 +1,5 @@
 /* Uygulama kabuğunu önbelleğe alır; internet yokken de açılır. Sürümü artırınca yeni sürüm yüklenir. */
-const CACHE = 'depo-inceleme-v7';
+const CACHE = 'depo-inceleme-v8';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './exceljs.min.js','./heic2any.min.js',
   './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 self.addEventListener('install', e => {
