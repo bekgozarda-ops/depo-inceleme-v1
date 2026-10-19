@@ -18,11 +18,15 @@ Klasörün **içindeki tüm dosyaları** bir https adresine koyun (ör. GitHub P
 1. **+ Yeni inceleme** → depo adı → bölümleri doldurun. Her bölümde **+ Fotoğraf** ile kamera açılır.
 2. Her değişiklik anında telefona kaydedilir.
 3. Gezi bitince formda **E-postayla gönder**: rapor hazırlanır (birkaç saniye), alttaki yeşil **Mail'e ekle ve gönder** düğmesi çıkar. Ona dokunun → Paylaş menüsünde **Mail** → kendi adresinizi yazın → Gönder. Ekte PDF rapor ve (Ayarlar'da açıksa) orijinal fotoğraflar olur. iPhone Excel dosyasını doğrudan eklemeye izin vermeyebilir; bu durumda yeşil düğmenin yanındaki **Excel** düğmesiyle Excel'i Dosyalar'a kaydedip Mail'de "Ek ekle" ile ekleyin.
-4. **Birden fazla depo (ör. Ankara gezisi):** Ana sayfada **Excel raporu** (veya siyah posta düğmesi) → üstteki mavi **Rapora alınacak depolar** çubuğuna dokunun; yukarıdan açılan pencerede depoları işaretleyip **Tamam**'a basın. **Excel indir**, **PDF** ve **E-posta** yalnızca seçili depoları tek dosyada verir. Formdan **Excel** açarsanız o depo seçili gelir, diğerlerini de ekleyebilirsiniz.
+4. **Birden fazla depo (ör. Ankara gezisi):** Menü (☰) › **Rapor hazırla** → yukarıdan açılan pencerede depoları işaretleyip **Tamam**'a basın. **Excel indir**, **PDF** ve **E-posta** yalnızca seçili depoları tek dosyada verir.
 5. Kat bilgisi: formda **Kat ve depolama** bölümünde her kat için ad, depolama m² ve (varsa) mezanin m² girilir; toplamlar otomatik hesaplanır. Eski kayıtlardaki Zemin/Bodrum değerleri otomatik kat satırına dönüşür.
 
 ## Rapora fotoğraf seçimi
 Formda her fotoğrafın altındaki **✓ Raporda / Rapor dışı** düğmesi veya rapor ekranında **Fotoğraflar** sekmesinde fotoğrafa dokunarak, Excel/PDF/e-postaya girecek fotoğrafları seçersiniz (varsayılan: hepsi).
+
+## Ziyaret planı (ana ekran)
+- **Planlanan ziyaretler:** "+ Ziyaret ekle" ile tarih ve depo adı girilir; ana ekranda tarihle birlikte listelenir (gecikenler kırmızı, bugün/yarın etiketli). Kartı düzenlemek/silmek için dokunun, sahada **Başlat** ile inceleme formu depo adı hazır olarak açılır ve ziyaret "Ziyaret edilenler"e geçer.
+- **Ziyaret edilenler:** Yukarıdan açılan pencerede üç grup vardır: **Hazırlanmayan** (rapor henüz hazır değil veya hazırlandıktan sonra değiştirildi), **Hazırlanan** (Excel/PDF indirildi veya e-posta hazırlandı), **Paylaşılan** (e-postaya/paylaşıma eklendi). Depo adıyla arama yapılabilir.
 
 ## Menü (sağ üst ☰)
 Excel raporu, e-posta gönderimi, depoyu dosya olarak paylaşma, başka kullanıcıdan depo alma ve Ayarlar buradadır. Menü yandan açılır; her işlemde yukarıdan sade bir depo seçim penceresi gelir.

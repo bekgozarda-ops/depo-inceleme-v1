@@ -197,6 +197,30 @@ table.xl a{color:#0563c1;font-weight:600;text-decoration:none}
 .srow small{flex:0 0 auto;font-weight:500;font-size:11px;color:var(--muted)}
 .srow .bx{flex:0 0 auto;width:20px;height:20px;border-radius:6px;border:2px solid var(--btn);background:transparent;display:grid;place-items:center;color:transparent;font-size:13px;line-height:1}
 .srow.on{background:rgba(46,117,182,.24);border-color:transparent}
+.vlist{display:flex;flex-direction:column;gap:10px}
+.visit{display:flex;align-items:center;gap:12px;background:var(--pc);border-radius:22px;padding:10px 12px 10px 10px}
+.visit .vd{flex:0 0 auto;width:54px;height:58px;border:0;border-radius:16px;background:var(--btn);color:var(--btn-fg);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}
+.visit .vd b{font-size:22px}
+.visit .vd span{font-size:11px;font-weight:700;text-transform:uppercase;opacity:.9}
+.visit.late .vd{background:var(--no)}
+.visit .vi{flex:1;min-width:0;border:0;background:none;text-align:left;padding:0;display:flex;flex-direction:column;gap:2px;color:var(--fg)}
+.visit .vi .tt{font-size:16px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.visit .vi small{font-size:12px;color:var(--muted)}
+.badge.late{background:var(--no-soft);color:var(--no)}
+.seg{display:flex;gap:6px;margin:8px 0}
+.seg button{flex:1;border:0;border-radius:12px;padding:7px 4px;font-size:12px;font-weight:700;background:rgba(255,255,255,.3);color:var(--fg)}
+.seg button b{display:block;font-size:17px}
+.seg button.on{background:var(--btn);color:var(--btn-fg)}
+@media (prefers-color-scheme:dark){.seg button{background:rgba(255,255,255,.07)}}
+.vs{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.35);border-radius:12px;padding:0 12px;min-height:40px;margin-bottom:8px}
+.vs input{flex:1;min-width:0;border:0;background:transparent;min-height:38px;outline:0}
+@media (prefers-color-scheme:dark){.vs{background:rgba(255,255,255,.07)}}
+.vrow small{max-width:46%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vrow .pcn{flex:0 0 auto;font-size:12px;font-weight:700;color:var(--btn);font-family:var(--mono)}
+.vform label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:10px 2px 4px}
+.vform input{width:100%;min-height:44px;border:0;border-radius:12px;background:rgba(255,255,255,.45);padding:0 12px;color:var(--fg)}
+@media (prefers-color-scheme:dark){.vform input{background:rgba(255,255,255,.08)}}
+.vform+.acts2{margin-top:14px}
 .srow{background:rgba(255,255,255,.28)}
 @media (prefers-color-scheme:dark){.srow{background:rgba(255,255,255,.05)}}
 .srow.on .bx{background:var(--btn);border-color:var(--btn);color:#fff}
@@ -334,7 +358,7 @@ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 function toast(m,ms=2800){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,ms)}
 const uid=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);
 const fmtDate=ts=>new Date(ts).toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit',year:'numeric'});
-const APP_V='v13';
+const APP_V='v14';
 const slug=s=>String(s||'depo').normalize('NFKD').replace(/[̀-ͯ]/g,'').replace(/ı/g,'i').replace(/İ/g,'I').replace(/[^A-Za-z0-9]+/g,'_').replace(/^_|_$/g,'')||'depo';
 function norm(r){
   r.v=r.v||{};r.photos=r.photos||[];
@@ -369,45 +393,90 @@ const ART_WH='<svg viewBox="0 0 90 70" aria-hidden="true"><path d="M4 30 45 8l41
 const ART_MAIL='<svg viewBox="0 0 90 70" aria-hidden="true"><rect x="8" y="14" width="74" height="48" rx="8" fill="currentColor" opacity=".16"/><path d="M12 20l33 24 33-24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" opacity=".6"/><circle cx="70" cy="52" r="14" fill="currentColor" opacity=".9"/><path d="M63 52l5 5 9-10" fill="none" stroke="var(--pc)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const ICON_SEARCH='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>';
 const ICON_MENU='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+const ART_CAL='<svg viewBox="0 0 90 70" aria-hidden="true"><rect x="14" y="12" width="62" height="52" rx="9" fill="currentColor" opacity=".18"/><rect x="14" y="12" width="62" height="16" rx="7" fill="currentColor" opacity=".5"/><g fill="currentColor" opacity=".75"><circle cx="30" cy="42" r="4"/><circle cx="45" cy="42" r="4"/><circle cx="60" cy="42" r="4"/><circle cx="30" cy="54" r="4"/><circle cx="45" cy="54" r="4"/></g></svg>';
 const ICON_MAIL='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7l8 6 8-6"/></svg>';
 const colorOf=r=>'pc'+(1+[...String(r.id)].reduce((a,c)=>a+c.charCodeAt(0),0)%5);
 const isShared=r=>!!(r.sharedAt&&!r.dirty);
+/* rapor durumu: todo = hazırlanmadı (veya hazırlandıktan sonra değişti), ready = hazırlandı, shared = paylaşıldı */
+const statusOf=r=>isShared(r)?'shared':(r.reportFor&&r.reportFor===r.updatedAt)?'ready':'todo';
+function markReport(recs){recs.forEach(r=>{r.reportFor=r.updatedAt;try{dbPut('rec',r)}catch(e){}})}
+let visits=[],visSeg='';
+const saveVisits=()=>{try{dbPut('kv',visits,'visits')}catch(e){}};
+const pad2=n=>String(n).padStart(2,'0');
+const todayISO=()=>{const d=new Date();return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate())};
+const isoDate=x=>{const [y,m,d]=x.split('-').map(Number);return new Date(y,m-1,d)};
+const plannedVisits=()=>visits.filter(v=>!v.recId).sort((a,b)=>a.date.localeCompare(b.date));
+function visitWhen(v){
+  const diff=Math.round((isoDate(v.date)-isoDate(todayISO()))/864e5);
+  const d=isoDate(v.date),long=d.toLocaleDateString('tr-TR',{day:'numeric',month:'long',weekday:'long'});
+  return {diff,long,label:diff<0?'Gecikmiş':diff===0?'Bugün':diff===1?'Yarın':'' ,late:diff<0,day:d.getDate(),mon:d.toLocaleDateString('tr-TR',{month:'short'}).replace('.','')};
+}
 
 /* ---------- Ana sayfa ---------- */
 let listFilter='', listQ='';
+function plannedCardHtml(v){
+  const w=visitWhen(v);
+  return `<div class="visit ${w.late?'late':''} pc3"><button class="vd" data-vedit="${v.id}" aria-label="Ziyareti düzenle"><b>${w.day}</b><span>${esc(w.mon)}</span></button><button class="vi" data-vedit="${v.id}"><span class="tt">${esc(v.name)}</span><small>${w.label?`<span class="badge ${w.late?'late':'ok'}" style="font-size:10px;padding:1px 7px;margin-right:6px">${w.label}</span>`:''}${esc(w.long)} · ziyaret edilecek${v.note?' · '+esc(v.note):''}</small></button><button class="iconbtn" data-vstart="${v.id}" style="min-height:38px;padding:0 14px;font-size:13px">Başlat</button></div>`;
+}
 function renderList(){
   view='list';cur=null;readyPack=null;revokeUrls();
   $('title').textContent='';$('back').hidden=true;$('chips').hidden=true;$('progwrap').hidden=true;$('gear').hidden=false;$('saved').textContent='';
   $('gear').innerHTML=ICON_MENU;
-  const all=[...records.values()].sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
-  const np=all.filter(r=>!isShared(r)).length, ns=all.length-np;
+  const all=[...records.values()];
+  const cnt={todo:0,ready:0,shared:0};all.forEach(r=>cnt[statusOf(r)]++);
+  const pl=plannedVisits();
   const first=(cfg.name||'').trim().split(/\s+/)[0];
-  let h=`<div class="hello"><h2>Merhaba${first?', '+esc(first):''}</h2><p>${all.length?`${all.length} inceleme, ${np} tanesi henüz e-postalanmadı`:'Sahaya hazır'}</p></div>`;
-  if(all.length){
-    h+=`<div class="search"><label>${ICON_SEARCH}<input id="q" type="search" placeholder="Depo ara" autocomplete="off" value="${esc(listQ)}"></label></div>
-    <div class="cats" style="margin-top:20px">
-      <button class="cat pc1" data-filter="pending" aria-pressed="${listFilter==='pending'}"><div><span>Gönderilecek</span><small>e-postalanmadı</small></div><b>${np}</b>${ART_WH}</button>
-      <button class="cat pc2" data-filter="shared" aria-pressed="${listFilter==='shared'}"><div><span>Paylaşılan</span><small>e-postaya eklendi</small></div><b>${ns}</b>${ART_MAIL}</button>
-    </div>
-    <h3 class="sh2">İncelemeler <span><small id="shown"></small></span></h3>`;
-    const items=all.filter(r=>!listFilter||(listFilter==='pending'?!isShared(r):isShared(r)));
-    h+='<div class="list" id="tasks">'+items.map(r=>{
-      const sh=isShared(r),ph=r.photos.slice(0,3),more=r.photos.length-ph.length,p=pct(r);
-      const avs=ph.length?`<div class="avs">${ph.map(x=>`<img data-pid="${x.id}" alt="">`).join('')}${more>0?`<em>+${more}</em>`:''}</div>`:`<div class="avs"><em>Fotoğraf yok</em></div>`;
-      return `<button class="task ${colorOf(r)}" data-open="${r.id}" data-name="${esc((r.v.ad||'Adsız depo').toLocaleLowerCase('tr'))}"><div class="tl"><span class="badge ${sh?'ok':''}">${sh?'Paylaşıldı':'Paylaşılmadı'}</span><span class="tt">${esc(r.v.ad||'Adsız depo')}</span><small>${fmtDate(r.createdAt)} · ${r.photos.length} fotoğraf${r.by?' · '+esc(r.by):''}</small>${avs}</div><div class="ring">${ringSvg(p,60,6)}</div></button>`;
-    }).join('')+'</div>';
-    if(!items.length)h+=`<div class="empty"><b>Bu listede inceleme yok</b>Filtreyi kaldırmak için kartlara tekrar dokunun.</div>`;
-  } else h+=`<div class="empty"><b>Henüz inceleme yok</b>Sahada ilk depoyu başlatmak için aşağıdaki düğmeye basın. Her şey telefonda saklanır, internet gerekmez.</div>`;
+  let h=`<div class="hello"><h2>Merhaba${first?', '+esc(first):''}</h2><p>${pl.length||all.length?`${pl.length} planlanan ziyaret · ${cnt.todo} raporu hazırlanmadı`:'Sahaya hazır'}</p></div>
+  <div class="cats" style="margin-top:20px">
+    <button class="cat pc1" data-addvisit="1"><div><span>Planlanan ziyaretler</span><small>+ ziyaret ekle</small></div><b>${pl.length}</b>${ART_CAL}</button>
+    <button class="cat pc2" id="openvisited"><div><span>Ziyaret edilenler</span><small>${cnt.todo} hazırlanmadı · ${cnt.ready} hazır · ${cnt.shared} paylaşıldı</small></div><b>${all.length}</b>${ART_WH}</button>
+  </div>
+  <h3 class="sh2">Planlanan ziyaretler <span><button class="iconbtn" data-addvisit="1" style="min-height:34px;padding:0 14px;font-size:13px">+ Ziyaret ekle</button></span></h3>`;
+  h+=pl.length?`<div class="vlist">${pl.map(plannedCardHtml).join('')}</div>`:`<div class="empty"><b>Planlanan ziyaret yok</b>Gideceğiniz depoyu ve tarihi eklemek için "+ Ziyaret ekle"ye dokunun. Eklenen ziyaretler burada tarihle birlikte listelenir.</div>`;
   $('main').innerHTML=h;
-  renderDock();filterList();fillThumbs();
-  window.scrollTo(0,0);
+  renderDock();window.scrollTo(0,0);
 }
-function filterList(){
-  const q=listQ.trim().toLocaleLowerCase('tr');let n=0;
-  document.querySelectorAll('#tasks .task').forEach(el=>{const ok=!q||el.dataset.name.includes(q);el.hidden=!ok;if(ok)n++});
-  const sh=$('shown');if(sh)sh.textContent=q?`${n} sonuç`:'';
+/* ---------- Ziyaret edilenler penceresi ---------- */
+function visitedListHtml(){
+  const q=(listQ||'').trim().toLocaleLowerCase('tr');
+  const items=[...records.values()].filter(r=>statusOf(r)===visSeg&&(!q||(r.v.ad||'Adsız depo').toLocaleLowerCase('tr').includes(q))).sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+  if(!items.length)return `<div class="empty2" style="font-size:13px">${q?'Sonuç yok':'Bu grupta ziyaret yok'}</div>`;
+  return items.map(r=>`<button class="srow vrow" data-open="${r.id}"><span class="nm">${esc(r.v.ad||'Adsız depo')}</span><small>${fmtDate(r.createdAt)}${r.photos.length?' · '+r.photos.length+' foto':''}${r.by?' · '+esc(r.by):''}</small><span class="pcn">%${pct(r)}</span></button>`).join('');
 }
-
+function visitedHtml(){
+  const cnt={todo:0,ready:0,shared:0};[...records.values()].forEach(r=>cnt[statusOf(r)]++);
+  const sg=(k,l)=>`<button data-seg="${k}" class="${visSeg===k?'on':''}"><b>${cnt[k]}</b>${l}</button>`;
+  return `<div class="in"><h3>Ziyaret edilenler</h3>
+  <div class="seg">${sg('todo','Hazırlanmayan')}${sg('ready','Hazırlanan')}${sg('shared','Paylaşılan')}</div>
+  <label class="vs">${ICON_SEARCH}<input id="vq" type="search" placeholder="Depo ara" autocomplete="off" value="${esc(listQ)}"></label>
+  <div class="lst" id="vlist">${visitedListHtml()}</div>
+  <span class="hint" style="margin:0 2px 8px">Excel/PDF indirildiğinde veya e-posta hazırlandığında "Hazırlanan"a, paylaşıldığında "Paylaşılan"a geçer.</span>
+  <div class="acts2"><button class="iconbtn" id="sheetbg2" style="min-height:44px;width:100%;justify-content:center;font-size:14px">Kapat</button></div></div>`;
+}
+function openVisited(){
+  const cnt={todo:0,ready:0,shared:0};[...records.values()].forEach(r=>cnt[statusOf(r)]++);
+  if(!visSeg||!cnt[visSeg])visSeg=cnt.todo?'todo':cnt.ready?'ready':cnt.shared?'shared':'todo';
+  $('topsheet').innerHTML=visitedHtml();$('topsheet').classList.add('open');$('sheetbg').classList.add('open');$('topsheet').setAttribute('aria-hidden','false');
+}
+/* ---------- Ziyaret ekle / düzenle ---------- */
+let editVisitId=null;
+function visitSheetHtml(v){
+  const names=[...new Set([...records.values()].map(r=>r.v.ad).concat(visits.map(x=>x.name)).filter(Boolean))];
+  return `<div class="in"><h3>${v?'Ziyareti düzenle':'Ziyaret ekle'}</h3><div class="vform">
+  <label for="vdate">Tarih</label><input id="vdate" type="date" value="${esc(v?v.date:todayISO())}">
+  <label for="vname">Depo</label><input id="vname" list="vnames" placeholder="Depo adı" autocomplete="off" value="${esc(v?v.name:'')}"><datalist id="vnames">${names.map(n=>`<option value="${esc(n)}">`).join('')}</datalist>
+  <label for="vnote">Not (isteğe bağlı)</label><input id="vnote" placeholder="Örn. Yetkili: ..." autocomplete="off" value="${esc(v?v.note||'':'')}"></div>
+  <div class="acts2">${v?'<button class="iconbtn danger" id="vdel" style="min-height:44px">Sil</button>':'<button class="iconbtn" id="sheetbg2" style="min-height:44px">İptal</button>'}<button class="primary" id="vsave">Kaydet</button></div></div>`;
+}
+function openVisitSheet(id){
+  editVisitId=id||null;
+  $('topsheet').innerHTML=visitSheetHtml(id?visits.find(v=>v.id===id):null);
+  $('topsheet').classList.add('open');$('sheetbg').classList.add('open');$('topsheet').setAttribute('aria-hidden','false');
+}
+function startVisit(id){
+  const v=visits.find(x=>x.id===id);if(!v)return;
+  newRec({ad:v.name,visitId:v.id});
+}
 /* ---------- Alt çubuk ---------- */
 function renderDock(){
   let h='';
@@ -532,10 +601,11 @@ function syncChips(){
 }
 let _raf=0;window.addEventListener('scroll',()=>{if(_raf)return;_raf=requestAnimationFrame(()=>{_raf=0;syncChips()})},{passive:true});
 function rerenderKeepScroll(){const y=window.scrollY;renderForm(cur.id);window.scrollTo(0,y)}
-function newRec(){
-  const r={id:uid(),createdAt:Date.now(),updatedAt:Date.now(),v:{},photos:[],dirty:true};
+function newRec(o){
+  const r={id:uid(),createdAt:Date.now(),updatedAt:Date.now(),v:o&&o.ad?{ad:o.ad}:{},photos:[],dirty:true};
+  if(o&&o.visitId){r.visitId=o.visitId;const vv=visits.find(x=>x.id===o.visitId);if(vv){vv.recId=r.id;saveVisits()}}
   records.set(r.id,r);persist(r);renderForm(r.id);
-  setTimeout(()=>$('f_ad')&&$('f_ad').focus(),60);
+  if(!(o&&o.ad))setTimeout(()=>$('f_ad')&&$('f_ad').focus(),60);
 }
 
 /* ---------- Fotoğraf ---------- */
@@ -912,6 +982,7 @@ async function downloadReport(recs,kind){
     const base=reportBase(recs);
     if(kind==='pdf')downloadBlob(await pdfBlob(recs),base+'.pdf');
     else downloadBlob(new Blob([await buildWorkbook(recs)],{type:XLSX_MIME}),base+'.xlsx');
+    markReport(recs);
     toast((kind==='pdf'?'PDF':'Excel')+' indirildi. Dosyalar › İndirilenler klasöründe.',6000);
   }catch(e){toast('Oluşturulamadı: '+((e&&e.message)||e),6000)}
 }
@@ -1105,6 +1176,7 @@ async function preparePack(recs){
   const notes=[];
   if(files&&!files.includes(xl))notes.push('Telefon Excel dosyasını doğrudan eklemeye izin vermiyor. PDF rapor eklenir; Excel için "Excel" düğmesiyle Dosyalar\'a kaydedip Mail\'de "Ek ekle"yi kullanın.');
   if(files&&photos.length&&files.filter(f=>f.type==='image/jpeg').length===0)notes.push('Fotoğraflar PDF raporun içindedir.');
+  markReport(recs);
   return {recs,xl,pdf,photos,title,text,files,label,note:notes.join(' ')};
 }
 function doShare(pk){
@@ -1212,8 +1284,21 @@ async function mailRecs(recs){
 document.addEventListener('click',async e=>{
   const t=e.target.closest('button');if(!t)return;
   if(t.id==='new')return newRec();
-  if(t.dataset.filter){listFilter=listFilter===t.dataset.filter?'':t.dataset.filter;return renderList()}
-  if(t.dataset.open)return renderForm(t.dataset.open);
+  if(t.dataset.addvisit!==undefined)return openVisitSheet(null);
+  if(t.dataset.vedit)return openVisitSheet(t.dataset.vedit);
+  if(t.dataset.vstart)return startVisit(t.dataset.vstart);
+  if(t.id==='openvisited')return openVisited();
+  if(t.dataset.seg){visSeg=t.dataset.seg;$('topsheet').innerHTML=visitedHtml();return}
+  if(t.id==='vsave'){
+    const date=$('vdate').value,name=$('vname').value.trim(),note=$('vnote').value.trim();
+    if(!date||!name)return toast('Tarih ve depo adı gerekli');
+    if(editVisitId){const v=visits.find(x=>x.id===editVisitId);if(v){v.date=date;v.name=name;v.note=note}}
+    else visits.push({id:uid(),date,name,note});
+    saveVisits();closeSheet();renderList();return toast('Ziyaret kaydedildi')}
+  if(t.id==='vdel'){
+    if(t.dataset.sure!=='1'){t.dataset.sure='1';t.textContent='Silmek için tekrar dokunun';return}
+    visits=visits.filter(x=>x.id!==editVisitId);saveVisits();closeSheet();renderList();return}
+  if(t.dataset.open){closeSheet();return renderForm(t.dataset.open)}
   if(t.id==='back'||t.id==='done'){await flush();if(view==='report'&&reportFrom&&records.has(reportFrom))return renderForm(reportFrom);return renderList()}
   if(t.dataset.tab){repTab=t.dataset.tab;return renderReport()}
   if(t.id==='opensel')return openSheet('view');
@@ -1283,6 +1368,7 @@ document.addEventListener('click',async e=>{
   if(t.id==='del'){
     if(t.dataset.sure!=='1'){t.dataset.sure='1';t.textContent='Silmek için tekrar dokunun';return}
     const rec=cur;records.delete(rec.id);cur=null;
+    if(visits.some(v=>v.recId===rec.id)){visits=visits.filter(v=>v.recId!==rec.id);saveVisits()}
     try{await dbDel('rec',rec.id);for(const p of rec.photos)await dbDel('photo',p.id)}catch(x){}
     renderList();toast('İnceleme silindi');
   }
@@ -1292,7 +1378,7 @@ document.addEventListener('change',e=>{
  if(i.dataset&&i.dataset.photo&&i.files.length){addPhotos(i.dataset.photo,[...i.files]);i.value=''}
 });
 document.addEventListener('input',e=>{
-  const i=e.target;if(i.id==='q'){listQ=i.value;return filterList()}
+  const i=e.target;if(i.id==='vq'){listQ=i.value;const l=$('vlist');if(l)l.innerHTML=visitedListHtml();return}
   if(cur&&i.dataset&&i.dataset.fl){
     const row=i.closest('.fl'),idx=+row.dataset.i;cur.v.katlar[idx][i.dataset.fl]=i.value;
     $('floortot').textContent=floorTotalsText(cur);syncKat();touch();return}
@@ -1318,6 +1404,7 @@ async function boot(){
   netState();
   try{
     const c=await dbGet('kv','cfg');if(c)cfg=Object.assign(cfg,c);
+    const vv=await dbGet('kv','visits');if(Array.isArray(vv))visits=vv;
     (await dbAll('rec')).forEach(r=>records.set(r.id,norm(r)));
   }catch(e){toast('Yerel depolama açılamadı. Özel gezinme kapalı olmalı.',6000)}
   renderList();
