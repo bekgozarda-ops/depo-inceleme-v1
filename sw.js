@@ -1,6 +1,6 @@
 /* Uygulama kabuğunu önbelleğe alır; internet yokken de açılır.
    Sayfa (index.html) internet varsa HER ZAMAN sunucudan taze alınır; yoksa önbellekten açılır. */
-const CACHE = 'depo-inceleme-v10';
+const CACHE = 'depo-inceleme-v13';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './exceljs.min.js','./heic2any.min.js',
   './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 self.addEventListener('install', e => {

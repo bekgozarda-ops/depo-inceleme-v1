@@ -16,6 +16,7 @@
 /* Yumuşak pastel kartlar, büyük yuvarlak köşeler, siyah ana düğme. Sistem yazı tipi (çevrimdışı çalışsın diye). */
 :root{
   --bg:#eef3f8; --surface:#ffffff; --fg:#14202e; --muted:#5d6b7c; --line:rgba(31,78,121,.12);
+  --glass:rgba(244,248,252,.62); --glass-line:rgba(255,255,255,.7);
   --ink:#1f4e79; --ink-fg:#ffffff; --btn:#2e75b6; --btn-fg:#ffffff; --btn-soft:#c9dcf0; --btn-soft-fg:#1f4e79;
   --yes:#1b7a43; --yes-soft:#d9f0e1; --no:#b3261e; --no-soft:#fbe0dd; --warn:#8a5300; --warn-soft:#fbeccf;
   --p1:#d6e6f6; --p2:#e4eef8; --p3:#c9dcf0; --p4:#dde9f3; --p5:#d1e3f2;
@@ -25,6 +26,7 @@
 }
 @media (prefers-color-scheme:dark){:root{
   --bg:#0e1722; --surface:#172433; --fg:#e8eef5; --muted:#9aa9ba; --line:rgba(255,255,255,.1);
+  --glass:rgba(18,30,44,.58); --glass-line:rgba(255,255,255,.14);
   --ink:#7db4e6; --ink-fg:#0b1824; --btn:#2f6ea8; --btn-fg:#ffffff; --btn-soft:#24476b; --btn-soft-fg:#d5e7fa;
   --yes:#62d08c; --yes-soft:#16382a; --no:#ff8f86; --no-soft:#41201e; --warn:#f2b45a; --warn-soft:#3d2d12;
   --p1:#1f3a56; --p2:#1a2f45; --p3:#25446a; --p4:#1d3550; --p5:#223f5e; color-scheme:dark}}
@@ -43,7 +45,7 @@ button{cursor:pointer}
 .bar{display:flex;align-items:center;gap:10px;min-width:0}
 .bar h1{font-size:17px;font-weight:700;margin:0;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}
 .circle{width:44px;height:44px;border-radius:50%;border:0;background:var(--btn);color:var(--btn-fg);box-shadow:0 1px 2px var(--line);font-size:20px;font-weight:600;display:inline-grid;place-items:center;flex:0 0 auto;padding:0}
-.av{background:var(--p1);color:var(--fg);font-size:16px;font-weight:700}
+.av{background:var(--btn);color:var(--btn-fg);font-size:16px;font-weight:700}
 .ring{flex:0 0 auto;color:var(--ink);display:grid;place-items:center}
 .save{font-size:11px;color:var(--muted);font-family:var(--mono)}
 .net{font-size:11px;padding:4px 10px;border-radius:999px;background:var(--warn-soft);color:var(--warn);font-weight:700;white-space:nowrap}
@@ -183,20 +185,34 @@ table.xl a{color:#0563c1;font-weight:600;text-decoration:none}
 .selbar b{display:block;font-size:14px}
 .selbar small{display:block;font-size:12px;opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:68vw}
 .selbar span.ar{margin-left:auto;font-size:18px}
-#sheetbg{position:fixed;inset:0;z-index:20;border:0;background:rgba(8,20,32,.5);opacity:0;pointer-events:none;transition:opacity .2s}
+#sheetbg{position:fixed;inset:0;z-index:20;border:0;background:rgba(8,20,32,.22);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .2s}
 #sheetbg.open{opacity:1;pointer-events:auto}
-#topsheet{position:fixed;left:0;right:0;top:0;z-index:21;background:var(--bg);border-radius:0 0 28px 28px;padding:calc(16px + env(safe-area-inset-top,0px)) 18px 16px;box-shadow:0 18px 40px rgba(0,0,0,.3);transform:translateY(-105%);transition:transform .25s ease;max-height:82vh;display:flex;flex-direction:column}
+#topsheet{position:fixed;left:0;right:0;top:0;z-index:21;background:var(--glass);-webkit-backdrop-filter:blur(26px) saturate(1.8);backdrop-filter:blur(26px) saturate(1.8);border:1px solid var(--glass-line);border-top:0;border-radius:0 0 28px 28px;padding:calc(14px + env(safe-area-inset-top,0px)) 18px 14px;box-shadow:0 18px 40px rgba(0,0,0,.3);transform:translateY(-105%);transition:transform .25s ease;max-height:82vh;display:flex;flex-direction:column}
 #topsheet.open{transform:none}
 #topsheet .in{max-width:640px;margin-inline:auto;width:100%;display:flex;flex-direction:column;min-height:0}
-#topsheet h3{margin:0 0 4px;font-size:18px}
+#topsheet h3{margin:0 0 2px;font-size:16px}
 #topsheet .lst{overflow:auto;margin:10px 0;display:flex;flex-direction:column;gap:8px;min-height:0}
-.srow{display:flex;align-items:center;gap:12px;width:100%;border:0;background:var(--btn-soft);color:var(--btn-soft-fg);border-radius:18px;padding:12px 14px;text-align:left;font-weight:700}
-.srow small{display:block;font-weight:500;opacity:.85;font-size:12px}
-.srow .bx{flex:0 0 auto;width:26px;height:26px;border-radius:8px;border:2px solid var(--btn);background:var(--surface);display:grid;place-items:center;color:transparent;font-size:16px}
-.srow.on{background:var(--btn);color:var(--btn-fg)}
-.srow.on .bx{background:#fff;border-color:#fff;color:var(--btn)}
+.srow{display:flex;align-items:center;gap:10px;width:100%;border:1px solid var(--line);background:transparent;color:var(--fg);border-radius:12px;padding:8px 12px;text-align:left;font-weight:600;font-size:14px;min-height:40px}
+.srow .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.srow small{flex:0 0 auto;font-weight:500;font-size:11px;color:var(--muted)}
+.srow .bx{flex:0 0 auto;width:20px;height:20px;border-radius:6px;border:2px solid var(--btn);background:transparent;display:grid;place-items:center;color:transparent;font-size:13px;line-height:1}
+.srow.on{background:rgba(46,117,182,.24);border-color:transparent}
+.srow{background:rgba(255,255,255,.28)}
+@media (prefers-color-scheme:dark){.srow{background:rgba(255,255,255,.05)}}
+.srow.on .bx{background:var(--btn);border-color:var(--btn);color:#fff}
+#topsheet .lst{gap:6px}
+#sidemenu{position:fixed;top:0;bottom:0;right:0;width:min(84vw,320px);z-index:21;background:var(--glass);-webkit-backdrop-filter:blur(26px) saturate(1.8);backdrop-filter:blur(26px) saturate(1.8);border-left:1px solid var(--glass-line);box-shadow:-12px 0 40px rgba(0,0,0,.3);transform:translateX(105%);transition:transform .25s ease;padding:calc(16px + env(safe-area-inset-top,0px)) 14px 16px;display:flex;flex-direction:column;border-radius:24px 0 0 24px}
+#sidemenu.open{transform:none}
+#sidemenu .hd{display:flex;align-items:center;justify-content:space-between;margin:0 6px 10px}
+#sidemenu .hd b{font-size:17px}
+#sidemenu .x{width:36px;height:36px;border-radius:50%;border:0;background:var(--btn);color:var(--btn-fg);font-size:20px;line-height:1}
+.mrow{display:flex;align-items:center;gap:14px;width:100%;border:0;background:transparent;color:var(--fg);padding:13px 10px;border-radius:14px;text-align:left;font-size:15px;font-weight:600}
+.mrow:active{background:var(--btn-soft)}
+.mrow .mi{width:26px;text-align:center;font-size:20px}
+.mrow small{display:block;font-weight:500;font-size:11px;color:var(--muted);margin-top:1px}
+.mrow+.mrow{border-top:1px solid var(--line);border-radius:0}
 #topsheet .acts2{display:flex;gap:8px}
-#topsheet .acts2 .primary{min-height:50px}
+#topsheet .acts2 .primary{min-height:44px;font-size:15px}
 .ptool{display:flex;gap:8px;padding:8px;flex-wrap:wrap;background:#fff}
 .xph .pt{position:relative;padding:0;border:0;background:none;border-radius:6px;overflow:hidden;aspect-ratio:4/3}
 .xph .pt img{display:block;height:100%}
@@ -218,13 +234,13 @@ table.xl a{color:#0563c1;font-weight:600;text-decoration:none}
     <h1 id="title"></h1>
     <span class="save" id="saved"></span>
     <span class="net" id="net" hidden>Çevrimdışı</span>
-    <button class="circle av" id="gear" aria-label="Ayarlar">D</button>
+    <button class="circle av" id="gear" aria-label="Menü">☰</button>
     <div class="ring" id="progwrap" hidden></div>
   </div>
   <div class="chips" id="chips" hidden></div>
 </div></div>
 
-<button id="sheetbg" aria-label="Kapat"></button><div id="topsheet" aria-hidden="true"></div>
+<button id="sheetbg" aria-label="Kapat"></button><input id="impfile" type="file" accept=".json,.txt,application/json,text/plain" multiple hidden><div id="topsheet" aria-hidden="true"></div><aside id="sidemenu" aria-hidden="true"></aside>
 <datalist id="katlist"><option value="Zemin Kat"><option value="1. Kat"><option value="2. Kat"><option value="3. Kat"><option value="Bodrum Kat -1"><option value="Bodrum Kat -2"><option value="Asma Kat"></datalist>
 <main class="wrap" id="main"></main>
 <div class="dock" id="dock"><div class="wrap" id="dockin"></div></div>
@@ -318,7 +334,7 @@ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 function toast(m,ms=2800){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,ms)}
 const uid=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);
 const fmtDate=ts=>new Date(ts).toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit',year:'numeric'});
-const APP_V='v10';
+const APP_V='v13';
 const slug=s=>String(s||'depo').normalize('NFKD').replace(/[̀-ͯ]/g,'').replace(/ı/g,'i').replace(/İ/g,'I').replace(/[^A-Za-z0-9]+/g,'_').replace(/^_|_$/g,'')||'depo';
 function norm(r){
   r.v=r.v||{};r.photos=r.photos||[];
@@ -352,6 +368,7 @@ function ringSvg(p,size,sw){
 const ART_WH='<svg viewBox="0 0 90 70" aria-hidden="true"><path d="M4 30 45 8l41 22v36H4z" fill="currentColor" opacity=".13"/><rect x="16" y="34" width="58" height="30" rx="4" fill="currentColor" opacity=".2"/><g fill="#fff" opacity=".85"><rect x="22" y="40" width="14" height="24" rx="2"/><rect x="40" y="40" width="14" height="24" rx="2"/><rect x="58" y="40" width="10" height="24" rx="2"/></g><path d="M4 30 45 8l41 22" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" opacity=".55"/></svg>';
 const ART_MAIL='<svg viewBox="0 0 90 70" aria-hidden="true"><rect x="8" y="14" width="74" height="48" rx="8" fill="currentColor" opacity=".16"/><path d="M12 20l33 24 33-24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" opacity=".6"/><circle cx="70" cy="52" r="14" fill="currentColor" opacity=".9"/><path d="M63 52l5 5 9-10" fill="none" stroke="var(--pc)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const ICON_SEARCH='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>';
+const ICON_MENU='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
 const ICON_MAIL='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7l8 6 8-6"/></svg>';
 const colorOf=r=>'pc'+(1+[...String(r.id)].reduce((a,c)=>a+c.charCodeAt(0),0)%5);
 const isShared=r=>!!(r.sharedAt&&!r.dirty);
@@ -361,23 +378,23 @@ let listFilter='', listQ='';
 function renderList(){
   view='list';cur=null;readyPack=null;revokeUrls();
   $('title').textContent='';$('back').hidden=true;$('chips').hidden=true;$('progwrap').hidden=true;$('gear').hidden=false;$('saved').textContent='';
-  $('gear').textContent=(cfg.name||'D').trim().charAt(0).toUpperCase();
+  $('gear').innerHTML=ICON_MENU;
   const all=[...records.values()].sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
   const np=all.filter(r=>!isShared(r)).length, ns=all.length-np;
   const first=(cfg.name||'').trim().split(/\s+/)[0];
   let h=`<div class="hello"><h2>Merhaba${first?', '+esc(first):''}</h2><p>${all.length?`${all.length} inceleme, ${np} tanesi henüz e-postalanmadı`:'Sahaya hazır'}</p></div>`;
   if(all.length){
-    h+=`<div class="search"><label>${ICON_SEARCH}<input id="q" type="search" placeholder="Depo ara" autocomplete="off" value="${esc(listQ)}"></label><button class="blackbtn" id="mailall" aria-label="Tümünü e-postala">${ICON_MAIL}</button></div>
+    h+=`<div class="search"><label>${ICON_SEARCH}<input id="q" type="search" placeholder="Depo ara" autocomplete="off" value="${esc(listQ)}"></label></div>
     <div class="cats" style="margin-top:20px">
       <button class="cat pc1" data-filter="pending" aria-pressed="${listFilter==='pending'}"><div><span>Gönderilecek</span><small>e-postalanmadı</small></div><b>${np}</b>${ART_WH}</button>
       <button class="cat pc2" data-filter="shared" aria-pressed="${listFilter==='shared'}"><div><span>Paylaşılan</span><small>e-postaya eklendi</small></div><b>${ns}</b>${ART_MAIL}</button>
     </div>
-    <h3 class="sh2">İncelemeler <span><small id="shown"></small> <button class="iconbtn" id="viewall" style="min-height:34px;padding:0 14px;font-size:13px">Excel raporu</button></span></h3>`;
+    <h3 class="sh2">İncelemeler <span><small id="shown"></small></span></h3>`;
     const items=all.filter(r=>!listFilter||(listFilter==='pending'?!isShared(r):isShared(r)));
     h+='<div class="list" id="tasks">'+items.map(r=>{
       const sh=isShared(r),ph=r.photos.slice(0,3),more=r.photos.length-ph.length,p=pct(r);
       const avs=ph.length?`<div class="avs">${ph.map(x=>`<img data-pid="${x.id}" alt="">`).join('')}${more>0?`<em>+${more}</em>`:''}</div>`:`<div class="avs"><em>Fotoğraf yok</em></div>`;
-      return `<button class="task ${colorOf(r)}" data-open="${r.id}" data-name="${esc((r.v.ad||'Adsız depo').toLocaleLowerCase('tr'))}"><div class="tl"><span class="badge ${sh?'ok':''}">${sh?'Paylaşıldı':'Paylaşılmadı'}</span><span class="tt">${esc(r.v.ad||'Adsız depo')}</span><small>${fmtDate(r.createdAt)} · ${r.photos.length} fotoğraf</small>${avs}</div><div class="ring">${ringSvg(p,60,6)}</div></button>`;
+      return `<button class="task ${colorOf(r)}" data-open="${r.id}" data-name="${esc((r.v.ad||'Adsız depo').toLocaleLowerCase('tr'))}"><div class="tl"><span class="badge ${sh?'ok':''}">${sh?'Paylaşıldı':'Paylaşılmadı'}</span><span class="tt">${esc(r.v.ad||'Adsız depo')}</span><small>${fmtDate(r.createdAt)} · ${r.photos.length} fotoğraf${r.by?' · '+esc(r.by):''}</small>${avs}</div><div class="ring">${ringSvg(p,60,6)}</div></button>`;
     }).join('')+'</div>';
     if(!items.length)h+=`<div class="empty"><b>Bu listede inceleme yok</b>Filtreyi kaldırmak için kartlara tekrar dokunun.</div>`;
   } else h+=`<div class="empty"><b>Henüz inceleme yok</b>Sahada ilk depoyu başlatmak için aşağıdaki düğmeye basın. Her şey telefonda saklanır, internet gerekmez.</div>`;
@@ -394,7 +411,8 @@ function filterList(){
 /* ---------- Alt çubuk ---------- */
 function renderDock(){
   let h='';
-  if(readyPack)h=`<button class="primary" id="shareready" style="background:var(--yes);color:#fff;line-height:1.15">Mail'e ekle ve gönder<small style="display:block;font-weight:500;font-size:12px;opacity:.9">${esc(readyPack.label)}</small></button><button class="iconbtn" id="dlready">Excel</button><button class="iconbtn" id="dlreadypdf">PDF</button>${matchMedia('(pointer:fine)').matches?'<button class="iconbtn" id="dlreadyeml">E-posta taslağı</button>':''}<button class="iconbtn" id="cancelready" aria-label="Vazgeç">✕</button>`;
+  if(readyPack&&readyPack.exp)h=`<button class="primary" id="shareready" style="background:var(--yes);color:#fff;line-height:1.15">Dosyayı paylaş<small style="display:block;font-weight:500;font-size:12px;opacity:.9">${esc(readyPack.label)}</small></button><button class="iconbtn" id="dlexp">İndir</button><button class="iconbtn" id="cancelready" aria-label="Vazgeç">✕</button>`;
+  else if(readyPack)h=`<button class="primary" id="shareready" style="background:var(--yes);color:#fff;line-height:1.15">Mail'e ekle ve gönder<small style="display:block;font-weight:500;font-size:12px;opacity:.9">${esc(readyPack.label)}</small></button><button class="iconbtn" id="dlready">Excel</button><button class="iconbtn" id="dlreadypdf">PDF</button>${matchMedia('(pointer:fine)').matches?'<button class="iconbtn" id="dlreadyeml">E-posta taslağı</button>':''}<button class="iconbtn" id="cancelready" aria-label="Vazgeç">✕</button>`;
   else if(view==='form')h=`<button class="primary" id="send">E-postayla gönder</button><button class="iconbtn" id="viewxl">Excel</button><button class="iconbtn" id="done">Bitti</button>`;
   else if(view==='report')h=`<button class="primary" id="dlxl">Excel indir</button><button class="iconbtn" id="dlpdf">PDF</button><button class="iconbtn" id="mailsel">E-posta</button><button class="iconbtn" id="done">Kapat</button>`;
   else if(view==='settings')h=`<button class="primary" id="done">Kapat</button>`;
@@ -418,11 +436,7 @@ function renderSettings(){
    <div class="sp"><button class="primary" id="cfgsave" style="min-height:50px">Kaydet</button></div>
    <p class="hint" id="cfgmsg"></p>
   </div>
-  <div class="card pad pc4" style="margin-top:14px"><label style="font-weight:700;display:block;margin-top:14px">Uygulamayı telefona yükle</label>
-   <p class="hint" style="margin-top:4px">Uygulama sürümü: <b>${APP_V}</b></p>
-   <p class="hint" style="margin-top:4px">Android Chrome: menüden "Uygulamayı yükle". iPhone Safari: Paylaş, sonra "Ana Ekrana Ekle".</p>
-   ${installEvt?'<button class="iconbtn" id="install" style="margin-top:10px">Uygulamayı yükle</button>':''}
-  </div>`;
+  <p class="hint" style="text-align:center;margin-top:14px">Uygulama sürümü: <b>${APP_V}</b></p>`;
   renderDock();
   window.scrollTo(0,0);
 }
@@ -861,13 +875,24 @@ function selBarHtml(){
 }
 function sheetHtml(){
   const n=reportSel.size;
-  return `<div class="in"><h3>Depo seçimi</h3><span class="rule" style="color:var(--muted);font-size:13px">Excel, PDF ve e-postaya girecek depoları işaretleyin.</span>
-  <div class="lst">${reportPool.map(r=>`<button class="srow ${reportSel.has(r.id)?'on':''}" data-sheetsel="${r.id}"><span class="bx">✓</span><span>${esc(r.v.ad||'Adsız depo')}<small>${fmtDate(r.createdAt)} · ${repPhotos(r).length} fotoğraf${numOf(r,'kapali')?' · '+numOf(r,'kapali').toLocaleString('tr-TR')+' m²':''}</small></span></button>`).join('')||'<div class="empty2">Henüz inceleme yok.</div>'}</div>
-  <div class="acts2"><button class="iconbtn" data-selall="1" style="min-height:50px">${n===reportPool.length?'Temizle':'Tümünü seç'}</button><button class="primary" id="sheetok">Tamam (${n} depo)</button></div></div>`;
+  return `<div class="in"><h3>${sheetMode==='mail'?'E-postaya eklenecek depolar':sheetMode==='export'?'Dosyaya konacak depolar':'Rapora alınacak depolar'}</h3>
+  <div class="lst">${reportPool.map(r=>`<button class="srow ${reportSel.has(r.id)?'on':''}" data-sheetsel="${r.id}"><span class="bx">✓</span><span class="nm">${esc(r.v.ad||'Adsız depo')}</span><small>${r.photos.length?r.photos.length+' foto':''}${r.by?(r.photos.length?' · ':'')+esc(r.by):''}</small></button>`).join('')||'<div class="empty2">Henüz inceleme yok.</div>'}</div>
+  <div class="acts2"><button class="iconbtn" data-selall="1" style="min-height:44px;font-size:14px">${n===reportPool.length?'Temizle':'Tümünü seç'}</button><button class="primary" id="sheetok" ${n?'':'disabled'}>${sheetMode==='mail'?'E-posta hazırla':sheetMode==='export'?'Dosya hazırla':'Tamam'} (${n} depo)</button></div></div>`;
 }
-function openSheet(){$('topsheet').innerHTML=sheetHtml();$('topsheet').classList.add('open');$('sheetbg').classList.add('open');$('topsheet').setAttribute('aria-hidden','false')}
+let sheetMode='view';
+function menuHtml(){
+  const it=(id,ic,t,sm)=>`<button class="mrow" id="${id}"><span class="mi">${ic}</span><span>${t}${sm?`<small>${sm}</small>`:''}</span></button>`;
+  return `<div class="hd"><b>Menü</b><button class="x" id="sheetbg2" aria-label="Kapat">×</button></div>
+  ${it('m_report','📊','Rapor hazırla','Excel / PDF')}
+  ${it('m_mail','✉️','E-posta gönder','')}
+  ${it('m_export','📤','Depo dosyası paylaş','Başka kullanıcıya iletmek için')}
+  ${it('m_import','📥','Depo dosyası al','Başkasından gelen depoyu ekle')}
+  ${it('m_settings','⚙️','Ayarlar','')}`;
+}
+function openMenu(){$('sidemenu').innerHTML=menuHtml();$('sidemenu').classList.add('open');$('sheetbg').classList.add('open');$('sidemenu').setAttribute('aria-hidden','false')}
+function openSheet(mode){if(mode)sheetMode=mode;$('topsheet').innerHTML=sheetHtml();$('topsheet').classList.add('open');$('sheetbg').classList.add('open');$('topsheet').setAttribute('aria-hidden','false')}
 function refreshSheet(){const y=$('topsheet').querySelector('.lst');const sc=y?y.scrollTop:0;$('topsheet').innerHTML=sheetHtml();const l=$('topsheet').querySelector('.lst');if(l)l.scrollTop=sc}
-function closeSheet(){$('topsheet').classList.remove('open');$('sheetbg').classList.remove('open');$('topsheet').setAttribute('aria-hidden','true')}
+function closeSheet(){$('sidemenu').classList.remove('open');$('sidemenu').setAttribute('aria-hidden','true');$('topsheet').classList.remove('open');$('sheetbg').classList.remove('open');$('topsheet').setAttribute('aria-hidden','true')}
 function renderReport(){
   closeSheet();view='report';cur=null;readyPack=null;revokeUrls();
   const recs=selRecs();
@@ -1115,6 +1140,52 @@ async function downloadEml(pk){
     pk.recs.forEach(r=>{r.sharedAt=Date.now();r.dirty=false;persist(r)});
   }catch(e){toast('Taslak oluşturulamadı: '+((e&&e.message)||e),6000)}
 }
+const blobToDataUrl=b=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>rej(r.error);r.readAsDataURL(b)});
+async function exportDepos(recs){
+  try{
+    toast('Depo dosyası hazırlanıyor…',15000);
+    const out=[];
+    for(const r of recs){
+      const ph=[];
+      for(const p of r.photos){const x=await dbGet('photo',p.id);ph.push({id:p.id,sec:p.sec,n:p.n,off:!!p.off,data:x?await blobToDataUrl(x.blob):null})}
+      out.push({id:r.id,createdAt:r.createdAt,updatedAt:r.updatedAt,by:r.by||cfg.name||'',v:r.v,photos:ph});
+    }
+    const json=JSON.stringify({format:'depo-inceleme',version:1,by:cfg.name||'',exportedAt:Date.now(),recs:out});
+    const base=recs.length===1?`Depo_${slug(recs[0].v.ad)}_${todayStr()}`:`Depolar_${recs.length}_${todayStr()}`;
+    const fj=new File([json],base+'.json',{type:'application/json'}),ft=new File([json],base+'.json.txt',{type:'text/plain'});
+    const can=f=>!!(navigator.share&&navigator.canShare&&navigator.canShare({files:[f]}));
+    const f=can(fj)?fj:can(ft)?ft:null;
+    $('toast').hidden=true;
+    if(!f||matchMedia('(pointer:fine)').matches){downloadBlob(fj,fj.name);toast('Depo dosyası indirildi. Karşı tarafa e-posta/Teams ile gönderin; o kişi Menü › "Başka kullanıcıdan depo al" ile açar.',10000);return}
+    readyPack={recs,files:[f],exp:true,title:'Depo İnceleme verisi',text:`${recs.length} depo ekte. Uygulamada Menü › "Başka kullanıcıdan depo al" ile açın.`,label:'Depo dosyası ('+recs.length+' depo)',jsonFile:fj};
+    renderDock();toast('Dosya hazır. Alttaki düğmeye dokunun.',5000);
+  }catch(e){toast('Dosya hazırlanamadı: '+((e&&e.message)||e),6000)}
+}
+async function importFiles(files){
+  let added=0,updated=0,skipped=0,bad=0;
+  for(const f of files){
+    try{
+      const d=JSON.parse(await f.text());
+      if(!d||d.format!=='depo-inceleme'||!Array.isArray(d.recs))throw new Error('format');
+      for(const r of d.recs){
+        const old=records.get(r.id);
+        if(old&&(old.updatedAt||0)>=(r.updatedAt||0)){skipped++;continue}
+        const metas=[];
+        for(const p of (r.photos||[])){
+          if(!p.data)continue;
+          const blob=await (await fetch(p.data)).blob();
+          await dbPut('photo',{id:p.id,recId:r.id,blob});
+          metas.push({id:p.id,sec:p.sec,n:p.n,...(p.off?{off:true}:{})});
+        }
+        const rec=norm({id:r.id,createdAt:r.createdAt||Date.now(),updatedAt:r.updatedAt||Date.now(),v:r.v||{},photos:metas,by:r.by||d.by||'Başka kullanıcı',sharedAt:Date.now(),dirty:false});
+        records.set(rec.id,rec);await dbPut('rec',rec);
+        old?updated++:added++;
+      }
+    }catch(e){bad++}
+  }
+  if(view==='list')renderList();
+  toast((added||updated?`${added} yeni, ${updated} güncellenen depo alındı`:'Yeni depo eklenmedi')+(skipped?` · ${skipped} zaten güncel`:'')+(bad?` · ${bad} dosya okunamadı`:''),8000);
+}
 function mailFallback(pk){
   if(matchMedia('(pointer:fine)').matches){downloadEml(pk);downloadBlob(pk.pdf,pk.pdf.name);readyPack=null;renderDock();return}
   downloadBlob(pk.pdf,pk.pdf.name);setTimeout(()=>downloadBlob(pk.xl,pk.xl.name),600);
@@ -1143,11 +1214,24 @@ document.addEventListener('click',async e=>{
   if(t.id==='new')return newRec();
   if(t.dataset.filter){listFilter=listFilter===t.dataset.filter?'':t.dataset.filter;return renderList()}
   if(t.dataset.open)return renderForm(t.dataset.open);
-  if(t.id==='gear'){await flush();return renderSettings()}
   if(t.id==='back'||t.id==='done'){await flush();if(view==='report'&&reportFrom&&records.has(reportFrom))return renderForm(reportFrom);return renderList()}
   if(t.dataset.tab){repTab=t.dataset.tab;return renderReport()}
-  if(t.id==='opensel')return openSheet();
-  if(t.id==='sheetbg'||t.id==='sheetok'){closeSheet();const y=window.scrollY;renderReport();window.scrollTo(0,y);return}
+  if(t.id==='opensel')return openSheet('view');
+  if(t.id==='gear'){await flush();return openMenu()}
+  if(t.id==='sheetbg'||t.id==='sheetbg2'){closeSheet();if(view==='report'){const y=window.scrollY;renderReport();window.scrollTo(0,y)}return}
+  if(t.id==='sheetok'){
+    if(!reportSel.size)return;
+    const m=sheetMode,recs=selRecs();closeSheet();
+    if(m==='mail')return mailRecs(recs);
+    if(m==='export')return exportDepos(recs);
+    if(view==='report'){const y=window.scrollY;renderReport();window.scrollTo(0,y)}return}
+  if(t.id==='m_report'){closeSheet();openReport(allSorted().map(r=>r.id),null);return openSheet('view')}
+  if(t.id==='m_mail'||t.id==='m_export'){
+    closeSheet();reportPool=allSorted();reportSel=new Set(reportPool.map(r=>r.id));
+    if(!reportPool.length)return toast('Henüz inceleme yok');
+    return openSheet(t.id==='m_mail'?'mail':'export')}
+  if(t.id==='m_import'){closeSheet();return $('impfile').click()}
+  if(t.id==='m_settings'){closeSheet();return renderSettings()}
   if(t.dataset.sheetsel){const id=t.dataset.sheetsel;reportSel.has(id)?reportSel.delete(id):reportSel.add(id);return refreshSheet()}
   if(t.dataset.selall){reportSel=reportSel.size===reportPool.length?new Set():new Set(reportPool.map(r=>r.id));return refreshSheet()}
   if(t.dataset.phall!==undefined){const on=t.dataset.phall==='1';selRecs().forEach(r=>{r.photos.forEach(p=>{if(on)delete p.off;else p.off=true});r.dirty=true;persist(r)});const y=window.scrollY;renderReport();window.scrollTo(0,y);return}
@@ -1174,6 +1258,7 @@ document.addEventListener('click',async e=>{
     const pk=readyPack;if(!pk)return;
     try{await doShare(pk)}catch(x){
       if(x&&x.name==='AbortError')return;
+      if(pk.exp){downloadBlob(pk.jsonFile,pk.jsonFile.name);toast('Paylaşım açılamadı; dosya indirildi. Karşı tarafa e-posta/Teams ile gönderin.',8000);return}
       toast('Paylaşım açılamadı ('+((x&&(x.name||x.message))||x)+'). PDF ve Excel telefona indirildi; e-postaya ekleyin.',9000);
       if(matchMedia('(pointer:fine)').matches){downloadEml(pk);return}
       downloadBlob(pk.pdf,pk.pdf.name);setTimeout(()=>downloadBlob(pk.xl,pk.xl.name),700);
@@ -1181,6 +1266,7 @@ document.addEventListener('click',async e=>{
     }
     return}
   if(t.id==='dlready'){if(readyPack)downloadBlob(readyPack.xl,readyPack.xl.name);return}
+  if(t.id==='dlexp'){if(readyPack)downloadBlob(readyPack.jsonFile,readyPack.jsonFile.name);return}
   if(t.id==='dlreadyeml'){if(readyPack)downloadEml(readyPack);return}
   if(t.id==='dlreadypdf'){if(readyPack)downloadBlob(readyPack.pdf,readyPack.pdf.name);return}
   if(t.id==='cancelready'){readyPack=null;return renderDock()}
@@ -1202,7 +1288,8 @@ document.addEventListener('click',async e=>{
   }
 });
 document.addEventListener('change',e=>{
-  const i=e.target;if(i.dataset&&i.dataset.photo&&i.files.length){addPhotos(i.dataset.photo,[...i.files]);i.value=''}
+  const i=e.target;if(i.id==='impfile'&&i.files.length){importFiles([...i.files]);i.value='';return}
+ if(i.dataset&&i.dataset.photo&&i.files.length){addPhotos(i.dataset.photo,[...i.files]);i.value=''}
 });
 document.addEventListener('input',e=>{
   const i=e.target;if(i.id==='q'){listQ=i.value;return filterList()}

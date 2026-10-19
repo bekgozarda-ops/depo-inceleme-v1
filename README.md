@@ -24,6 +24,12 @@ Klasörün **içindeki tüm dosyaları** bir https adresine koyun (ör. GitHub P
 ## Rapora fotoğraf seçimi
 Formda her fotoğrafın altındaki **✓ Raporda / Rapor dışı** düğmesi veya rapor ekranında **Fotoğraflar** sekmesinde fotoğrafa dokunarak, Excel/PDF/e-postaya girecek fotoğrafları seçersiniz (varsayılan: hepsi).
 
+## Menü (sağ üst ☰)
+Excel raporu, e-posta gönderimi, depoyu dosya olarak paylaşma, başka kullanıcıdan depo alma ve Ayarlar buradadır. Menü yandan açılır; her işlemde yukarıdan sade bir depo seçim penceresi gelir.
+
+## Başka kullanıcının deposunu görme
+Veriler her kişinin kendi telefonunda durur. Depoyu yapan kişi **Menü › Depoyu dosya olarak paylaş** ile bir dosya hazırlar (fotoğraflar dahil) ve size e-posta/Teams ile gönderir. Siz dosyayı telefona/bilgisayara indirip **Menü › Başka kullanıcıdan depo al** ile seçersiniz; depo listenize eklenir (altında ekleyen kişinin adı yazar) ve raporlara dahil edilebilir.
+
 ## Bilgisayarda e-posta
 Bilgisayar tarayıcısında (Edge/Chrome) paylaşım menüsü yoktur ve web uygulaması e-postayı kendisi gönderemez. **E-posta** düğmesi, raporları ekli bir **.eml taslağı** olarak indirir; dosyaya çift tıklayınca Outlook/Mail yeni e-posta olarak açar, alıcıyı yazıp gönderirsiniz.
 
